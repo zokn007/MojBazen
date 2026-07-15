@@ -1,8 +1,17 @@
-MOJ BAZEN v4.1 TEST — by Davor Gričnik
+MOJ BAZEN v4.2 — by Davor Gričnik
 
-Na GitHub naloži vse datoteke iz ZIP-a in prepiši stare.
-Če iPhone kaže staro različico, odstrani aplikacijo z začetnega zaslona, odpri povezavo v Safariju, osveži in ponovno izberi Dodaj na začetni zaslon.
+Popravljeno:
+- odpravljena JavaScript napaka, zaradi katere gumbi niso delovali,
+- nova pravilno oblikovana ikona kapljice,
+- odstranjena oznaka test,
+- izboljšano osveževanje predpomnilnika aplikacije.
 
-Vključeno: nova ikona, animacije, temni način, meritve, pametni pomočnik, dnevnik, stroški, zaloga, opomniki, grafi, vreme, sezona, JSON/CSV/PDF in Siri navodila.
+Na GitHub naloži in prepiši VSE datoteke iz ZIP-a.
 
-Omejitve: pravi widget, Apple Watch, Live Activities, popolna iCloud/CloudKit sinhronizacija in neposredni Bluetooth senzorji zahtevajo domačo iOS aplikacijo.
+Na iPhonu po posodobitvi:
+1. Izbriši staro ikono Moj bazen z začetnega zaslona.
+2. Odpri aplikacijo v Safariju in osveži stran.
+3. Če se še prikazuje stara različica:
+   Nastavitve > Aplikacije > Safari > Napredno > Podatki spletnih mest
+   in izbriši podatke za github.io oziroma svojo domeno.
+4. Ponovno odpri povezavo in izberi Deli > Dodaj na začetni zaslon.
