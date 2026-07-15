@@ -1,199 +1,30 @@
-<!doctype html>
-<html lang="sl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0878b8">
-<title>Moj bazen 3</title>
-<link rel="manifest" href="manifest.json">
-<style>
-:root{--bg:#eef6fb;--card:#fff;--ink:#153247;--muted:#63798a;--line:#d8e6ef;--accent:#0878b8;--ok:#15785a;--warn:#a76800;--bad:#a93636}
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
-header{padding:24px 16px 20px;background:linear-gradient(135deg,#0878b8,#18a6c9);color:#fff;border-radius:0 0 26px 26px}
-header h1{margin:0;font-size:29px}header p{margin:5px 0 0;opacity:.9}
-main{max-width:820px;margin:auto;padding:14px 13px 40px}
-nav{display:flex;gap:8px;overflow:auto;padding:2px 0 13px}nav button{width:auto;white-space:nowrap;margin:0;background:#dcecf6;color:#22526e}nav button.active{background:var(--accent);color:#fff}
-section{display:none}section.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:13px;box-shadow:0 4px 18px rgba(19,56,80,.06)}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
-h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:7px 0}label{display:block;font-size:13px;color:var(--muted);margin:9px 0 5px}
-input,select,textarea,button{width:100%;padding:11px 12px;border:1px solid #c9d9e4;border-radius:12px;font:inherit;background:#fff}
-button{border:0;background:var(--accent);color:#fff;font-weight:700;margin-top:10px;cursor:pointer}button.secondary{background:#e5f1f8;color:#17618b}button.danger{background:#f8e5e5;color:var(--bad)}
-.metric{font-size:12px;color:var(--muted)}.metric b{display:block;font-size:21px;color:var(--ink);margin-top:3px}.small{font-size:12px;color:var(--muted);line-height:1.45}
-.status{padding:10px 11px;border-radius:13px;margin-top:9px;line-height:1.4;font-size:14px}.ok{background:#e6f5ef;color:var(--ok)}.warn{background:#fff2d9;color:var(--warn)}.bad{background:#fbe6e6;color:var(--bad)}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.task{border:1px solid var(--line);border-radius:15px;padding:12px;margin:9px 0}
-table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:8px 5px;border-bottom:1px solid var(--line)}
-canvas.chart{width:100%;height:220px;border:1px solid var(--line);border-radius:14px;background:#fff}
-#photoCanvas{width:100%;max-height:360px;border-radius:14px;border:1px solid var(--line);touch-action:none}
-.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#e5f1f8;color:#235d7e;font-size:12px;margin:3px 4px 3px 0}
-@media(max-width:600px){.grid3{grid-template-columns:1fr 1fr}.actions{grid-template-columns:1fr}}
-</style>
-</head>
-<body>
-<header><h1>💧 Moj bazen 3</h1><p>Meritve, kemikalije, grafi, fotografije in opomniki</p></header>
-<main>
-<nav>
-<button class="tab active" data-tab="home">Pregled</button>
-<button class="tab" data-tab="measure">Meritev</button>
-<button class="tab" data-tab="photo">Foto test</button>
-<button class="tab" data-tab="chem">Kemikalije</button>
-<button class="tab" data-tab="tasks">Opomniki</button>
-<button class="tab" data-tab="charts">Grafi</button>
-<button class="tab" data-tab="data">Podatki</button>
-<button class="tab" data-tab="settings">Profil</button>
-</nav>
-
-<section id="home" class="active">
-<div class="grid3">
-<div class="card"><div class="metric">Bazen<b id="dName">–</b></div></div>
-<div class="card"><div class="metric">Prostornina<b id="dVol">–</b></div></div>
-<div class="card"><div class="metric">Temperatura<b id="dTemp">–</b></div></div>
-<div class="card"><div class="metric">pH<b id="dPh">–</b></div></div>
-<div class="card"><div class="metric">Klor<b id="dCl">–</b></div></div>
-<div class="card"><div class="metric">Zadnja meritev<b id="dDate">–</b></div></div>
-</div>
-<div class="card"><h2>Priporočilo</h2><div id="advice" class="status warn">Najprej nastavi profil bazena in shrani meritev.</div></div>
-<div class="card"><h2>Opravila</h2><div id="homeTasks"></div></div>
-</section>
-
-<section id="measure">
-<div class="card"><h2>Nova meritev</h2>
-<div class="grid3">
-<div><label>pH</label><input id="mPh" type="number" step="0.1" placeholder="7,2"></div>
-<div><label>Prosti klor mg/l</label><input id="mCl" type="number" step="0.1" placeholder="1,0"></div>
-<div><label>Temperatura °C</label><input id="mTemp" type="number" step="0.1" placeholder="27"></div>
-<div><label>Alkalnost TA mg/l</label><input id="mTa" type="number" step="1"></div>
-<div><label>Stabilizator CYA mg/l</label><input id="mCya" type="number" step="1"></div>
-<div><label>Trdota CH mg/l</label><input id="mCh" type="number" step="1"></div>
-</div>
-<label>Opomba</label><textarea id="mNote" rows="3"></textarea>
-<button onclick="saveMeasurement()">Shrani meritev</button><div id="mMsg"></div>
-</div></section>
-
-<section id="photo">
-<div class="card"><h2>Fotografiranje testnega lističa</h2>
-<p class="small">Fotografiraj listič pri enakomerni dnevni svetlobi. Nato na fotografiji tapni polje za pH in polje za klor. Aplikacija poišče najbližjo referenčno barvo. Rezultat je orientacijski; pri pomembnih odmerkih ga potrdi z merilnikom ali barvno lestvico proizvajalca.</p>
-<input id="photoInput" type="file" accept="image/*" capture="environment">
-<canvas id="photoCanvas" width="800" height="500"></canvas>
-<div class="actions"><button onclick="setSampleMode('ph')">Izberi točko pH</button><button onclick="setSampleMode('cl')">Izberi točko klora</button></div>
-<div id="photoResult" class="status warn">Najprej izberi fotografijo.</div>
-<button onclick="usePhotoValues()">Uporabi rezultat kot meritev</button>
-</div></section>
-
-<section id="chem">
-<div class="card"><h2>Samodejni izračun kemikalij</h2>
-<label>Izdelek</label><select id="product"></select>
-<div class="grid">
-<div><label>Trenutna vrednost</label><input id="currentValue" type="number" step="0.1"></div>
-<div><label>Ciljna vrednost</label><input id="targetValue" type="number" step="0.1"></div>
-</div>
-<button onclick="calcChemical()">Izračunaj odmerek</button><div id="chemResult"></div>
-</div>
-<div class="card"><h2>Podprte znamke</h2><div id="brands"></div><p class="small">Formule so splošne orientacijske vrednosti. Vedno imajo prednost navodila na konkretni embalaži, ker se koncentracije izdelkov razlikujejo.</p></div>
-</section>
-
-<section id="tasks"><div class="card"><h2>Ponavljajoča se opravila</h2><div id="taskList"></div>
-<button class="secondary" onclick="requestNotifications()">Dovoli obvestila aplikacije</button></div></section>
-
-<section id="charts">
-<div class="card"><h2>Gibanje pH</h2><canvas id="phChart" class="chart" width="760" height="220"></canvas></div>
-<div class="card"><h2>Gibanje prostega klora</h2><canvas id="clChart" class="chart" width="760" height="220"></canvas></div>
-</section>
-
-<section id="data">
-<div class="card"><h2>Varnostna kopija in iCloud Drive</h2>
-<p class="small">Izvoz ustvari datoteko, ki jo lahko shraniš v iCloud Drive. Na drugi napravi jo izbereš z Uvozi. To je ročna sinhronizacija in varnostna kopija.</p>
-<div class="actions"><button onclick="exportData()">Izvozi v datoteko</button><button class="secondary" onclick="$('importFile').click()">Uvozi datoteko</button></div>
-<input id="importFile" type="file" accept=".json,application/json" hidden>
-</div>
-<div class="card"><h2>Zgodovina</h2><div style="overflow:auto"><table><thead><tr><th>Datum</th><th>pH</th><th>Klor</th><th>°C</th><th></th></tr></thead><tbody id="history"></tbody></table></div></div>
-</section>
-
-<section id="settings">
-<div class="card"><h2>Profil bazena</h2>
-<label>Ime bazena</label><input id="sName" placeholder="Domači bazen">
-<div class="grid">
-<div><label>Dolžina (m)</label><input id="sL" type="number" step="0.1"></div>
-<div><label>Širina (m)</label><input id="sW" type="number" step="0.1"></div>
-<div><label>Povprečna globina (m)</label><input id="sD" type="number" step="0.1"></div>
-<div><label>Prostornina po meri (m³)</label><input id="sV" type="number" step="0.1"></div>
-</div>
-<label>Vrsta bazena</label><select id="sType"><option>Vgradni</option><option>Nadzemni</option><option>Montažni</option></select>
-<label>Obloga</label><select id="sSurface"><option>Folija</option><option>Keramika</option><option>Poliester</option><option>Drugo</option></select>
-<button onclick="saveProfile()">Shrani profil</button><div id="sMsg"></div>
-</div></section>
-</main>
-
-<script>
-const $=id=>document.getElementById(id),get=(k,d=null)=>JSON.parse(localStorage.getItem(k)??JSON.stringify(d)),set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('section').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active');if(b.dataset.tab==='charts')drawCharts();if(b.dataset.tab==='data')renderHistory()});
-
-const products=[
-{name:'Steinbach pH Minus',brand:'Steinbach',kind:'phMinus',unit:'g',factor:100,perM3:10,delta:.1},
-{name:'Steinbach pH Plus',brand:'Steinbach',kind:'phPlus',unit:'g',factor:100,perM3:10,delta:.1},
-{name:'Steinbach klor granulat',brand:'Steinbach',kind:'chlorine',unit:'g',factor:15,perM3:10,delta:1},
-{name:'Bayrol pH-Minus',brand:'Bayrol',kind:'phMinus',unit:'g',factor:100,perM3:10,delta:.1},
-{name:'Bayrol pH-Plus',brand:'Bayrol',kind:'phPlus',unit:'g',factor:100,perM3:10,delta:.1},
-{name:'Bayrol Chlorifix',brand:'Bayrol',kind:'chlorine',unit:'g',factor:20,perM3:10,delta:1},
-{name:'Planet Pool pH Minus',brand:'Planet Pool',kind:'phMinus',unit:'g',factor:100,perM3:10,delta:.1},
-{name:'Planet Pool pH Plus',brand:'Planet Pool',kind:'phPlus',unit:'g',factor:100,perM3:10,delta:.1},
-{name:'Planet Pool klor granulat',brand:'Planet Pool',kind:'chlorine',unit:'g',factor:20,perM3:10,delta:1},
-{name:'Splošni algecid',brand:'Splošno',kind:'algaecide',unit:'ml',factor:50,perM3:10,delta:1}
-];
-
-const defaultTasks=[
-{id:'test',title:'Preveri pH in klor',days:3,next:null},
-{id:'filter',title:'Očisti ali izperi filter',days:7,next:null},
-{id:'robot',title:'Zaženi robotski sesalnik',days:3,next:null},
-{id:'water',title:'Preveri nivo vode',days:2,next:null},
-{id:'walls',title:'Očisti vodno linijo in stene',days:14,next:null}
-];
-
-function profile(){return get('profile',{name:'Domači bazen',l:'',w:'',d:'',v:'',type:'Vgradni',surface:'Folija'})}
-function volume(){const p=profile();return Number(p.v)||Number(p.l)*Number(p.w)*Number(p.d)||0}
-function saveProfile(){const p={name:$('sName').value||'Domači bazen',l:$('sL').value,w:$('sW').value,d:$('sD').value,v:$('sV').value,type:$('sType').value,surface:$('sSurface').value};set('profile',p);$('sMsg').innerHTML='<div class="status ok">Profil je shranjen.</div>';refresh()}
-function loadProfile(){const p=profile();$('sName').value=p.name;$('sL').value=p.l;$('sW').value=p.w;$('sD').value=p.d;$('sV').value=p.v;$('sType').value=p.type;$('sSurface').value=p.surface}
-
-function saveMeasurement(){const ph=Number($('mPh').value),cl=Number($('mCl').value);if(!ph||$('mCl').value===''){$('mMsg').innerHTML='<div class="status bad">Vnesi vsaj pH in prosti klor.</div>';return}
-const a=get('measurements',[]);a.unshift({id:Date.now(),date:new Date().toISOString(),ph,cl,temp:$('mTemp').value,ta:$('mTa').value,cya:$('mCya').value,ch:$('mCh').value,note:$('mNote').value});set('measurements',a);$('mMsg').innerHTML='<div class="status ok">Meritev je shranjena.</div>';refresh()}
-
-function advice(m){if(!m)return ['warn','Ni meritev.'];let a=[];if(m.ph<7)a.push('pH je prenizek.');else if(m.ph>7.4)a.push('pH je previsok.');else a.push('pH je ustrezen.');if(m.cl<.5)a.push('Klor je prenizek.');else if(m.cl>1.5)a.push('Klor je visok.');else a.push('Klor je v običajnem območju.');return[(m.ph>=7&&m.ph<=7.4&&m.cl>=.5&&m.cl<=1.5)?'ok':'warn',a.join(' ')]}
-function refresh(){const p=profile(),m=get('measurements',[])[0];$('dName').textContent=p.name;$('dVol').textContent=volume()?volume().toFixed(1)+' m³':'–';$('dTemp').textContent=m&&m.temp?m.temp+' °C':'–';$('dPh').textContent=m?.ph??'–';$('dCl').textContent=m?m.cl+' mg/l':'–';$('dDate').textContent=m?new Date(m.date).toLocaleDateString('sl-SI'):'–';const x=advice(m);$('advice').className='status '+x[0];$('advice').textContent=x[1];renderHomeTasks()}
-
-function calcChemical(){const v=volume(),p=products[$('product').selectedIndex],cur=Number($('currentValue').value),tar=Number($('targetValue').value);if(!v){$('chemResult').innerHTML='<div class="status bad">Najprej nastavi prostornino bazena.</div>';return}
-let amount;if(p.kind==='algaecide')amount=p.factor*(v/p.perM3);else amount=Math.abs(tar-cur)/p.delta*p.factor*(v/p.perM3);
-$('chemResult').innerHTML=`<div class="status ok">Orientacijski odmerek: <b>${amount.toFixed(0)} ${p.unit}</b> za ${v.toFixed(1)} m³. Dodajaj postopoma, ob vključeni cirkulaciji, in ponovno izmeri vodo. Vedno preveri navodila na embalaži.</div>`}
-
-function iso(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
-function tasks(){return get('tasksV3',defaultTasks.map(x=>({...x})))}
-function state(t){if(!t.next)return['warn','Datum ni določen'];let a=new Date();a.setHours(0,0,0,0);let b=new Date(t.next+'T12:00:00');b.setHours(0,0,0,0);let n=Math.round((b-a)/86400000);return n<0?['bad',`Zamuja ${-n} dni`]:n===0?['bad','Danes']:n===1?['warn','Jutri']:['ok',`Čez ${n} dni`]}
-function renderTasks(){const a=tasks();$('taskList').innerHTML=a.map((t,i)=>{const s=state(t);return`<div class="task"><b>${t.title}</b><div class="grid"><div><label>Ponovi čez dni</label><input type="number" min="1" value="${t.days}" onchange="taskDays(${i},this.value)"></div><div><label>Naslednji datum</label><input type="date" value="${t.next||''}" onchange="taskDate(${i},this.value)"></div></div><div class="status ${s[0]}">${s[1]}</div><div class="actions"><button onclick="doneTask(${i})">Opravljeno danes</button><button class="secondary" onclick="calendarTask(${i})">Koledarski opomnik</button></div></div>`}).join('')}
-function renderHomeTasks(){$('homeTasks').innerHTML=tasks().slice(0,4).map(t=>{const s=state(t);return`<span class="pill">${t.title}: ${s[1]}</span>`}).join('')}
-function taskDays(i,v){let a=tasks();a[i].days=Math.max(1,Number(v)||1);set('tasksV3',a);renderTasks()}
-function taskDate(i,v){let a=tasks();a[i].next=v||null;set('tasksV3',a);renderTasks()}
-function doneTask(i){let a=tasks(),d=new Date();d.setDate(d.getDate()+Number(a[i].days));a[i].next=iso(d);set('tasksV3',a);renderTasks();renderHomeTasks()}
-function calendarTask(i){const t=tasks()[i];if(!t.next){alert('Najprej določi datum.');return}const d=t.next.replaceAll('-','');const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Moj bazen//SL','BEGIN:VEVENT',`UID:${Date.now()}@moj-bazen`,`DTSTART;VALUE=DATE:${d}`,`DTEND;VALUE=DATE:${d}`,`SUMMARY:Moj bazen: ${t.title}`,'BEGIN:VALARM','TRIGGER:-PT9H','ACTION:DISPLAY',`DESCRIPTION:${t.title}`,'END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');const b=new Blob([ics],{type:'text/calendar'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`bazen-${t.id}-${t.next}.ics`;a.click()}
-async function requestNotifications(){if(!('Notification'in window)){alert('Uporabi koledarski opomnik.');return}alert(await Notification.requestPermission()==='granted'?'Obvestila dovoljena.':'Obvestila niso dovoljena.')}
-
-function renderHistory(){const a=get('measurements',[]);$('history').innerHTML=a.length?a.map(m=>`<tr><td>${new Date(m.date).toLocaleString('sl-SI')}</td><td>${m.ph}</td><td>${m.cl}</td><td>${m.temp||'–'}</td><td><button class="danger" style="padding:5px;margin:0" onclick="delM(${m.id})">×</button></td></tr>`).join(''):'<tr><td colspan="5">Ni meritev.</td></tr>'}
-function delM(id){set('measurements',get('measurements',[]).filter(x=>x.id!==id));renderHistory();refresh()}
-
-function drawLine(id,key,min,max){const c=$(id),x=c.getContext('2d'),a=get('measurements',[]).slice(0,20).reverse();x.clearRect(0,0,c.width,c.height);x.strokeStyle='#d8e6ef';x.beginPath();for(let i=0;i<5;i++){let y=20+i*45;x.moveTo(45,y);x.lineTo(c.width-15,y)}x.stroke();if(a.length<2){x.fillStyle='#63798a';x.fillText('Za graf sta potrebni vsaj dve meritvi.',55,110);return}x.strokeStyle='#0878b8';x.lineWidth=3;x.beginPath();a.forEach((m,i)=>{let px=45+i*(c.width-70)/(a.length-1),py=200-(Number(m[key])-min)/(max-min)*170;if(i===0)x.moveTo(px,py);else x.lineTo(px,py)});x.stroke();x.fillStyle='#153247';x.fillText(String(max),8,25);x.fillText(String(min),8,202)}
-function drawCharts(){drawLine('phChart','ph',6.5,8);drawLine('clChart','cl',0,3)}
-
-function exportData(){const o={version:3,profile:profile(),measurements:get('measurements',[]),tasks:tasks()};const b=new Blob([JSON.stringify(o,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='moj-bazen-varnostna-kopija.json';a.click()}
-$('importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(o.profile)set('profile',o.profile);if(o.measurements)set('measurements',o.measurements);if(o.tasks)set('tasksV3',o.tasks);loadProfile();refresh();renderTasks();alert('Podatki so uvoženi.')}catch{alert('Datoteka ni veljavna.')}};r.readAsText(f)}
-
-let img=null,sampleMode=null,photoVals={ph:null,cl:null};
-const phRefs=[{v:6.8,c:[235,188,54]},{v:7.2,c:[232,128,54]},{v:7.6,c:[205,76,82]},{v:8.0,c:[151,64,112]}];
-const clRefs=[{v:0,c:[245,240,204]},{v:.5,c:[232,213,111]},{v:1,c:[211,181,70]},{v:3,c:[178,128,49]}];
-$('photoInput').onchange=e=>{const f=e.target.files[0];if(!f)return;const u=URL.createObjectURL(f);img=new Image();img.onload=()=>{const c=$('photoCanvas'),ctx=c.getContext('2d'),r=Math.min(c.width/img.width,c.height/img.height);ctx.clearRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,img.width*r,img.height*r);$('photoResult').className='status warn';$('photoResult').textContent='Izberi vrsto točke in tapni ustrezno barvno polje na lističu.'};img.src=u}
-function setSampleMode(m){sampleMode=m;$('photoResult').textContent=`Tapni barvno polje za ${m==='ph'?'pH':'klor'}.`}
-$('photoCanvas').onclick=e=>{if(!sampleMode)return;const c=e.target,r=c.getBoundingClientRect(),x=(e.clientX-r.left)*c.width/r.width,y=(e.clientY-r.top)*c.height/r.height,p=c.getContext('2d').getImageData(x,y,1,1).data,refs=sampleMode==='ph'?phRefs:clRefs;let best=refs[0],bd=1e9;refs.forEach(q=>{let d=(p[0]-q.c[0])**2+(p[1]-q.c[1])**2+(p[2]-q.c[2])**2;if(d<bd){bd=d;best=q}});photoVals[sampleMode]=best.v;$('photoResult').className='status ok';$('photoResult').textContent=`Ocenjeni pH: ${photoVals.ph??'–'} · ocenjeni klor: ${photoVals.cl??'–'} mg/l`;sampleMode=null}
-function usePhotoValues(){if(photoVals.ph!=null)$('mPh').value=photoVals.ph;if(photoVals.cl!=null)$('mCl').value=photoVals.cl;document.querySelector('[data-tab="measure"]').click()}
-
-$('product').innerHTML=products.map(p=>`<option>${p.name}</option>`).join('');
-$('brands').innerHTML=[...new Set(products.map(p=>p.brand))].map(x=>`<span class="pill">${x}</span>`).join('');
-loadProfile();refresh();renderTasks();renderHistory();
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-</script>
-</body></html>
+<!doctype html><html lang="sl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0878b8"><title>Moj bazen by Davor Gričnik</title><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><style>
+:root{--bg:#eef8fc;--card:rgba(255,255,255,.93);--ink:#12324a;--muted:#647d8d;--line:#d6e7ef;--a:#0878b8;--ok:#16785a;--warn:#a86600;--bad:#a93636}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(#e8f7fd,#f8fbfd 38%,#eef8fc);color:var(--ink)}body.dark{--card:#132c3c;--ink:#eef8fc;--muted:#abc1ce;--line:#2d5268;background:#0d1e2b}.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#076ca8,#12a5c8);color:white;padding:25px 18px 50px;border-radius:0 0 34px 34px}.hero:after{content:"";position:absolute;left:-5%;right:-5%;bottom:-30px;height:75px;border-radius:50%;background:rgba(255,255,255,.16);animation:w 5s ease-in-out infinite}.bubble{position:absolute;border-radius:50%;background:rgba(255,255,255,.2);animation:b 8s linear infinite}.b1{width:16px;height:16px;left:18%;bottom:-20px}.b2{width:11px;height:11px;left:48%;bottom:-30px;animation-delay:2s}.b3{width:20px;height:20px;left:78%;bottom:-25px;animation-delay:4s}@keyframes b{to{transform:translateY(-210px);opacity:0}}@keyframes w{50%{transform:translateY(7px)}}.brand{display:flex;gap:13px;align-items:center;position:relative;z-index:2}.brand img{width:58px;height:58px;border-radius:17px;box-shadow:0 8px 22px #06446d}.brand h1{font-size:29px;margin:0;line-height:1}.brand small{display:block;font-size:12px;margin-top:6px}.hero p{position:relative;z-index:2;margin:16px 0 0;opacity:.92}main{max-width:920px;margin:-21px auto 0;padding:0 13px 45px;position:relative;z-index:3}nav{display:flex;gap:8px;overflow:auto;padding-bottom:14px}button,input,select,textarea{font:inherit;border-radius:12px;padding:11px 12px;border:1px solid #c8dbe5;width:100%}button{border:0;background:var(--a);color:#fff;font-weight:700;margin-top:9px}nav button{width:auto;white-space:nowrap;margin:0;background:#dceef7;color:#225974}nav button.active{background:var(--a);color:white}section{display:none}section.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 12px 30px rgba(17,62,90,.09)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}h2{font-size:19px;margin:0 0 12px}label{display:block;font-size:13px;color:var(--muted);margin:9px 0 5px}.metric{font-size:12px;color:var(--muted)}.metric b{display:block;font-size:21px;color:var(--ink);margin-top:3px}.small{font-size:12px;color:var(--muted);line-height:1.48}.status{padding:11px 12px;border-radius:14px;margin-top:9px;font-size:14px;line-height:1.45}.ok{background:#e7f5ef;color:var(--ok)}.warn{background:#fff1d7;color:var(--warn)}.bad{background:#fbe7e7;color:var(--bad)}.secondary{background:#e5f2f8;color:#17618b}.danger{background:#fae7e7;color:var(--bad)}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.item{border:1px solid var(--line);border-radius:15px;padding:12px;margin:9px 0}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#e5f2f8;color:#235d7e;font-size:12px;margin:3px 4px 3px 0}.poolpic{height:165px;overflow:hidden;position:relative;background:linear-gradient(155deg,#9de5f2 0 24%,#20b2d1 25% 52%,#0878b8 53% 75%,#075783 76%);border-radius:18px}.poolpic:before{content:"";position:absolute;left:8%;right:8%;bottom:20%;height:23%;border-radius:50%;border:5px solid rgba(255,255,255,.7);transform:rotate(-3deg)}.poolpic:after{content:"POOL";position:absolute;right:18px;bottom:12px;color:rgba(255,255,255,.35);font-weight:800;font-size:42px;letter-spacing:4px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:8px 5px;border-bottom:1px solid var(--line)}canvas{width:100%;height:230px;background:white;border:1px solid var(--line);border-radius:14px}@media(max-width:650px){.grid4,.grid3{grid-template-columns:1fr 1fr}.actions{grid-template-columns:1fr}}
+</style></head><body><header class="hero"><div class="brand"><img src="icon-192.png"><div><h1>Moj bazen</h1><small>by Davor Gričnik · v4.1 test</small></div></div><p>Pametni pomočnik za meritve, kemikalije, stroške, zalogo, vreme in sezonsko vzdrževanje.</p><span class="bubble b1"></span><span class="bubble b2"></span><span class="bubble b3"></span></header><main><nav><button class="tab active" data-tab="home">Pregled</button><button class="tab" data-tab="measure">Meritev</button><button class="tab" data-tab="assistant">Pomočnik</button><button class="tab" data-tab="log">Dnevnik</button><button class="tab" data-tab="stock">Zaloga</button><button class="tab" data-tab="tasks">Opomniki</button><button class="tab" data-tab="charts">Grafi</button><button class="tab" data-tab="weather">Vreme</button><button class="tab" data-tab="data">Podatki</button><button class="tab" data-tab="settings">Profil</button></nav>
+<section id="home" class="active"><div class="poolpic card"></div><div class="grid4"><div class="card"><div class="metric">Bazen<b id="dName">–</b></div></div><div class="card"><div class="metric">Prostornina<b id="dVol">–</b></div></div><div class="card"><div class="metric">pH<b id="dPh">–</b></div></div><div class="card"><div class="metric">Klor<b id="dCl">–</b></div></div></div><div class="card"><h2>Današnja analiza</h2><div id="advice" class="status warn">Najprej nastavi profil in shrani meritev.</div><div id="plan"></div></div><div class="grid"><div class="card"><h2>Naslednja opravila</h2><div id="homeTasks"></div></div><div class="card"><h2>Sezona</h2><div id="season"></div></div></div></section>
+<section id="measure"><div class="card"><h2>Nova meritev</h2><div class="grid3"><div><label>pH</label><input id="mPh" type="number" step=".1"></div><div><label>Prosti klor mg/l</label><input id="mCl" type="number" step=".1"></div><div><label>Temperatura °C</label><input id="mTemp" type="number" step=".1"></div><div><label>TA mg/l</label><input id="mTa" type="number"></div><div><label>CYA mg/l</label><input id="mCya" type="number"></div><div><label>CH mg/l</label><input id="mCh" type="number"></div></div><label>Opomba</label><textarea id="mNote"></textarea><button onclick="saveM()">Shrani meritev</button><div id="mMsg"></div></div></section>
+<section id="assistant"><div class="card"><h2>Pametni pomočnik</h2><label>Izdelek</label><select id="product"></select><div class="grid"><div><label>Trenutna vrednost</label><input id="cur" type="number" step=".1"></div><div><label>Ciljna vrednost</label><input id="tar" type="number" step=".1"></div></div><button onclick="dose()">Izračunaj odmerek</button><div id="doseOut"></div></div><div class="card"><h2>Varnostni vrstni red</h2><p class="small">Najprej uravnaj pH, nato klor. Kemikalij nikoli ne mešaj neposredno. Vedno preveri odmerek in navodila na embalaži.</p></div></section>
+<section id="log"><div class="card"><h2>Dnevnik vzdrževanja</h2><div class="grid"><div><label>Opravilo</label><select id="logType"><option>Dodan klor</option><option>Dodan pH minus</option><option>Dodan pH plus</option><option>Dodan algecid</option><option>Izpran filter</option><option>Robotsko sesanje</option><option>Očiščena vodna linija</option><option>Menjava vode</option><option>Drugo</option></select></div><div><label>Količina</label><input id="logAmount"></div></div><label>Strošek (€)</label><input id="logCost" type="number" step=".01"><label>Opomba</label><textarea id="logNote"></textarea><button onclick="addLog()">Dodaj</button></div><div class="card"><h2>Zadnji vnosi</h2><div id="logs"></div></div></section>
+<section id="stock"><div class="card"><h2>Zaloga</h2><div class="grid"><div><label>Izdelek</label><input id="stockName"></div><div><label>Količina</label><input id="stockQty" type="number" step=".1"></div><div><label>Enota</label><select id="stockUnit"><option>g</option><option>kg</option><option>ml</option><option>l</option><option>kos</option></select></div><div><label>Opozori pod</label><input id="stockMin" type="number" step=".1"></div></div><button onclick="addStock()">Dodaj izdelek</button></div><div class="card"><div id="stocks"></div></div></section>
+<section id="tasks"><div class="card"><h2>Ponavljajoča se opravila</h2><div id="taskList"></div><button class="secondary" onclick="allowN()">Dovoli obvestila</button></div></section>
+<section id="charts"><div class="card"><h2>Graf</h2><select id="metric" onchange="drawChart()"><option value="ph">pH</option><option value="cl">Prosti klor</option><option value="temp">Temperatura</option><option value="ta">TA</option><option value="cya">CYA</option><option value="ch">CH</option></select></div><div class="card"><canvas id="chart" width="840" height="240"></canvas></div><div class="card"><h2>Stroški sezone</h2><div id="cost"></div></div></section>
+<section id="weather"><div class="card"><h2>Vremenski pomočnik</h2><p class="small">Uporabi lokacijo telefona in brezplačen vremenski vir Open-Meteo.</p><button onclick="weather()">Pridobi vreme</button><div id="weatherOut"></div></div></section>
+<section id="data"><div class="card"><h2>Izvoz in varnostna kopija</h2><div class="actions"><button onclick="backup()">Izvozi JSON</button><button class="secondary" onclick="importFile.click()">Uvozi JSON</button><button onclick="csv()">Izvozi CSV</button><button class="secondary" onclick="window.print()">Shrani kot PDF</button></div><input id="importFile" type="file" accept=".json" hidden></div><div class="card"><h2>Zgodovina</h2><div style="overflow:auto"><table><thead><tr><th>Datum</th><th>pH</th><th>Klor</th><th>°C</th><th></th></tr></thead><tbody id="history"></tbody></table></div></div></section>
+<section id="settings"><div class="card"><h2>Profil bazena</h2><label>Ime bazena</label><input id="sName"><div class="grid"><div><label>Dolžina m</label><input id="sL" type="number" step=".1"></div><div><label>Širina m</label><input id="sW" type="number" step=".1"></div><div><label>Globina m</label><input id="sD" type="number" step=".1"></div><div><label>Prostornina po meri m³</label><input id="sV" type="number" step=".1"></div></div><div class="grid"><div><label>Vrsta</label><select id="sType"><option>Vgradni</option><option>Nadzemni</option><option>Montažni</option></select></div><div><label>Obloga</label><select id="sSurface"><option>Folija</option><option>Keramika</option><option>Poliester</option><option>Drugo</option></select></div></div><div class="grid"><div><label>Začetek sezone</label><input id="sStart" type="date"></div><div><label>Konec sezone</label><input id="sEnd" type="date"></div></div><button onclick="saveP()">Shrani profil</button><div id="sMsg"></div></div><div class="card"><h2>Videz in integracije</h2><div class="actions"><button class="secondary" onclick="dark()">Temni način</button><button class="secondary" onclick="shortcut()">Siri/Bližnjice</button></div><p class="small">Pravi iPhone widget, Apple Watch aplikacija, Live Activities, neposredna Bluetooth povezava in popolnoma samodejna iCloud sinhronizacija zahtevajo domačo iOS aplikacijo. Ta PWA uporablja najboljše spletne približke.</p></div></section>
+</main><script>
+const $=x=>document.getElementById(x),get=(k,d=null)=>JSON.parse(localStorage.getItem(k)??JSON.stringify(d)),set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('section').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active');if(b.dataset.tab==='charts')drawChart();if(b.dataset.tab==='data')history();if(b.dataset.tab==='log')logs();if(b.dataset.tab==='stock')stocks()});
+const products=[['Steinbach pH Minus','g',100,10,.1],['Steinbach pH Plus','g',100,10,.1],['Steinbach klor granulat','g',15,10,1],['Bayrol pH-Minus','g',100,10,.1],['Bayrol pH-Plus','g',100,10,.1],['Bayrol Chlorifix','g',20,10,1],['Planet Pool pH Minus','g',100,10,.1],['Planet Pool pH Plus','g',100,10,.1],['Planet Pool klor granulat','g',20,10,1],['Splošni algecid','ml',50,10,1]];
+const DT=[{id:'test',t:'Preveri pH in klor',d:3,n:null},{id:'filter',t:'Očisti ali izperi filter',d:7,n:null},{id:'robot',t:'Zaženi robotski sesalnik',d:3,n:null},{id:'water',t:'Preveri nivo vode',d:2,n:null},{id:'walls',t:'Očisti vodno linijo in stene',d:14,n:null}];
+function P(){return get('P',{name:'Domači bazen',l:'',w:'',d:'',v:'',type:'Vgradni',surface:'Folija',start:'',end:''})}function V(){let p=P();return Number(p.v)||Number(p.l)*Number(p.w)*Number(p.d)||0}function loadP(){let p=P();sName.value=p.name;sL.value=p.l;sW.value=p.w;sD.value=p.d;sV.value=p.v;sType.value=p.type;sSurface.value=p.surface;sStart.value=p.start;sEnd.value=p.end}function saveP(){set('P',{name:sName.value||'Domači bazen',l:sL.value,w:sW.value,d:sD.value,v:sV.value,type:sType.value,surface:sSurface.value,start:sStart.value,end:sEnd.value});sMsg.innerHTML='<div class="status ok">Profil je shranjen.</div>';refresh()}
+function saveM(){let ph=Number(mPh.value),cl=Number(mCl.value);if(!ph||mCl.value===''){mMsg.innerHTML='<div class="status bad">Vnesi pH in klor.</div>';return}let a=get('M',[]);a.unshift({id:Date.now(),date:new Date().toISOString(),ph,cl,temp:mTemp.value,ta:mTa.value,cya:mCya.value,ch:mCh.value,note:mNote.value});set('M',a);mMsg.innerHTML='<div class="status ok">Meritev je shranjena.</div>';refresh()}
+function ana(m){if(!m)return['warn','Ni meritev.',[]];let x=[],p=[];if(m.ph<7){x.push('pH je prenizek.');p.push('Dodaj pH plus.')}else if(m.ph>7.4){x.push('pH je previsok.');p.push('Dodaj pH minus.')}else x.push('pH je ustrezen.');if(m.cl<.5){x.push('Klor je prenizek.');p.push('Po uravnanju pH dodaj klor.')}else if(m.cl>1.5){x.push('Klor je visok.');p.push('Ne dodajaj klora.')}else x.push('Klor je ustrezen.');if(Number(m.temp)>=29)p.push('Zaradi vročine preveri klor jutri.');return[(m.ph>=7&&m.ph<=7.4&&m.cl>=.5&&m.cl<=1.5)?'ok':'warn',x.join(' '),p]}
+function refresh(){let p=P(),m=get('M',[])[0],a=ana(m);dName.textContent=p.name;dVol.textContent=V()?V().toFixed(1)+' m³':'–';dPh.textContent=m?.ph??'–';dCl.textContent=m?m.cl+' mg/l':'–';advice.className='status '+a[0];advice.textContent=a[1];plan.innerHTML=a[2].length?'<ul>'+a[2].map(x=>'<li>'+x+'</li>').join('')+'</ul>':'';homeT();season.innerHTML=`<div class="metric">Vnosov<b>${get('L',[]).length}</b></div><div class="metric">Strošek<b>${get('L',[]).reduce((s,x)=>s+Number(x.cost||0),0).toFixed(2)} €</b></div>`}
+function dose(){let p=products[product.selectedIndex],v=V();if(!v){doseOut.innerHTML='<div class="status bad">Najprej nastavi prostornino.</div>';return}let a=Math.abs(Number(tar.value)-Number(cur.value))/p[4]*p[2]*(v/p[3]);doseOut.innerHTML=`<div class="status ok">Orientacijsko: <b>${a.toFixed(0)} ${p[1]}</b>. Dodajaj postopoma in preveri embalažo.</div>`}
+function addLog(){let a=get('L',[]);a.unshift({id:Date.now(),date:new Date().toISOString(),type:logType.value,amount:logAmount.value,cost:Number(logCost.value||0),note:logNote.value});set('L',a);logs();refresh()}function logs(){let a=get('L',[]);$('logs').innerHTML=a.length?a.slice(0,20).map(x=>`<div class="item"><b>${x.type}</b><div class="small">${new Date(x.date).toLocaleString('sl-SI')} · ${x.amount||'brez količine'} · ${x.cost.toFixed(2)} €</div><div>${x.note||''}</div></div>`).join(''):'<div class="small">Ni vnosov.</div>'}
+function addStock(){let a=get('S',[]);a.push({id:Date.now(),name:stockName.value||'Izdelek',q:Number(stockQty.value||0),u:stockUnit.value,min:Number(stockMin.value||0)});set('S',a);stocks()}function stocks(){let a=get('S',[]);$('stocks').innerHTML=a.length?a.map(x=>`<div class="item"><b>${x.name}</b><div class="status ${x.q<=x.min?'bad':'ok'}">${x.q} ${x.u}${x.q<=x.min?' · nizka zaloga':''}</div><div class="actions"><button class="secondary" onclick="chg(${x.id},-1)">−1</button><button onclick="chg(${x.id},1)">+1</button></div></div>`).join(''):'<div class="small">Ni izdelkov.</div>'}function chg(id,d){let a=get('S',[]),x=a.find(v=>v.id===id);if(x)x.q=Math.max(0,x.q+d);set('S',a);stocks()}
+function iso(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}function T(){return get('T',DT.map(x=>({...x})))}function st(t){if(!t.n)return['warn','Datum ni določen'];let a=new Date();a.setHours(0,0,0,0);let b=new Date(t.n+'T12:00:00');b.setHours(0,0,0,0);let n=Math.round((b-a)/86400000);return n<0?['bad',`Zamuja ${-n} dni`]:n===0?['bad','Danes']:n===1?['warn','Jutri']:['ok',`Čez ${n} dni`]}function tasks(){let a=T();taskList.innerHTML=a.map((t,i)=>{let s=st(t);return`<div class="item"><b>${t.t}</b><div class="grid"><div><label>Ponovi čez dni</label><input type="number" value="${t.d}" onchange="td(${i},this.value)"></div><div><label>Naslednji datum</label><input type="date" value="${t.n||''}" onchange="tn(${i},this.value)"></div></div><div class="status ${s[0]}">${s[1]}</div><div class="actions"><button onclick="done(${i})">Opravljeno danes</button><button class="secondary" onclick="cal(${i})">Koledarski opomnik</button></div></div>`}).join('')}function td(i,v){let a=T();a[i].d=Math.max(1,Number(v)||1);set('T',a);tasks()}function tn(i,v){let a=T();a[i].n=v||null;set('T',a);tasks()}function done(i){let a=T(),d=new Date();d.setDate(d.getDate()+Number(a[i].d));a[i].n=iso(d);set('T',a);tasks();homeT()}function homeT(){homeTasks.innerHTML=T().slice(0,4).map(t=>{let s=st(t);return`<span class="pill">${t.t}: ${s[1]}</span>`}).join('')}function cal(i){let t=T()[i];if(!t.n){alert('Najprej določi datum.');return}let d=t.n.replaceAll('-',''),ics=['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',`UID:${Date.now()}@moj-bazen`,`DTSTART;VALUE=DATE:${d}`,`DTEND;VALUE=DATE:${d}`,`SUMMARY:Moj bazen: ${t.t}`,'BEGIN:VALARM','TRIGGER:-PT9H','ACTION:DISPLAY',`DESCRIPTION:${t.t}`,'END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');dl(ics,`bazen-${t.id}.ics`,'text/calendar')}async function allowN(){alert(!('Notification'in window)?'Uporabi koledarski opomnik.':await Notification.requestPermission()==='granted'?'Obvestila dovoljena.':'Obvestila niso dovoljena.')}
+function drawChart(){let key=metric.value,sets={ph:[6.5,8],cl:[0,3],temp:[10,35],ta:[0,180],cya:[0,100],ch:[0,500]},mm=sets[key],c=chart,x=c.getContext('2d'),a=get('M',[]).slice(0,30).reverse();x.clearRect(0,0,c.width,c.height);x.strokeStyle='#d8e6ef';x.beginPath();for(let i=0;i<5;i++){let y=20+i*48;x.moveTo(48,y);x.lineTo(c.width-15,y)}x.stroke();if(a.length<2){x.fillStyle='#657d8e';x.fillText('Potrebni sta vsaj dve meritvi.',60,120);return}x.strokeStyle='#0878b8';x.lineWidth=3;x.beginPath();a.forEach((m,i)=>{let px=48+i*(c.width-75)/(a.length-1),py=210-(Number(m[key])-mm[0])/(mm[1]-mm[0])*175;i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke();cost.innerHTML=`<div class="metric">Skupaj<b>${get('L',[]).reduce((s,v)=>s+Number(v.cost||0),0).toFixed(2)} €</b></div>`}
+async function weather(){weatherOut.innerHTML='<div class="status warn">Pridobivam vreme …</div>';navigator.geolocation.getCurrentPosition(async p=>{try{let r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${p.coords.latitude}&longitude=${p.coords.longitude}&current=temperature_2m&daily=temperature_2m_max,precipitation_sum&timezone=auto`),j=await r.json(),t=j.current.temperature_2m,rain=j.daily.precipitation_sum[0],tip=t>=28?'Zaradi vročine preveri klor pogosteje.':rain>=5?'Po dežju preveri pH, klor in nivo vode.':'Posebni ukrepi niso potrebni.';weatherOut.innerHTML=`<div class="status ok">${t} °C · ${rain} mm padavin.<br>${tip}</div>`}catch{weatherOut.innerHTML='<div class="status bad">Vremena ni mogoče pridobiti.</div>'}},()=>weatherOut.innerHTML='<div class="status bad">Lokacija ni dovoljena.</div>')}
+function history(){let a=get('M',[]);$('history').innerHTML=a.length?a.map(m=>`<tr><td>${new Date(m.date).toLocaleString('sl-SI')}</td><td>${m.ph}</td><td>${m.cl}</td><td>${m.temp||'–'}</td><td><button class="danger" style="padding:5px;margin:0" onclick="delM(${m.id})">×</button></td></tr>`).join(''):'<tr><td colspan="5">Ni meritev.</td></tr>'}function delM(id){set('M',get('M',[]).filter(x=>x.id!==id));history();refresh()}function dl(data,name,type){let b=new Blob([data],{type}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click()}function backup(){dl(JSON.stringify({version:'v4.1',P:P(),M:get('M',[]),L:get('L',[]),S:get('S',[]),T:T()},null,2),'moj-bazen-v4-backup.json','application/json')}function csv(){let a=get('M',[]),r=[['Datum','pH','Klor','Temperatura','TA','CYA','CH'],...a.map(m=>[m.date,m.ph,m.cl,m.temp,m.ta,m.cya,m.ch])];dl(r.map(x=>x.join(';')).join('\n'),'moj-bazen-meritve.csv','text/csv')}importFile.onchange=e=>{let f=e.target.files[0],r=new FileReader();r.onload=()=>{try{let o=JSON.parse(r.result);if(o.P)set('P',o.P);if(o.M)set('M',o.M);if(o.L)set('L',o.L);if(o.S)set('S',o.S);if(o.T)set('T',o.T);loadP();refresh();tasks();alert('Podatki uvoženi.')}catch{alert('Datoteka ni veljavna.')}};r.readAsText(f)}function dark(){document.body.classList.toggle('dark');set('dark',document.body.classList.contains('dark'))}function shortcut(){dl('BLIŽNJICE IN SIRI\n1. V aplikaciji Bližnjice dodaj dejanje Odpri URL.\n2. Vnesi spletni naslov aplikacije Moj bazen.\n3. Poimenuj jo Moj bazen.\n4. Reci: Hej Siri, Moj bazen.','Moj-bazen-Siri.txt','text/plain')}
+product.innerHTML=products.map(p=>`<option>${p[0]}</option>`).join('');if(get('dark',false))document.body.classList.add('dark');loadP();refresh();tasks();history();logs();stocks();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+</script></body></html>

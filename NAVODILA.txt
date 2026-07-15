@@ -1,16 +1,8 @@
-MOJ BAZEN 3
+MOJ BAZEN v4.1 TEST — by Davor Gričnik
 
-Glavne funkcije:
-- profil bazena in izračun prostornine,
-- meritve pH, klora, temperature, TA, CYA in CH,
-- grafi pH in klora,
-- fotografiranje testnega lističa z orientacijskim barvnim odčitkom,
-- knjižnica izdelkov Steinbach, Bayrol in Planet Pool,
-- orientacijski samodejni izračun odmerkov,
-- ponavljajoča opravila in koledarski opomniki,
-- izvoz/uvoz varnostne kopije prek iCloud Drive,
-- delovanje brez interneta po namestitvi kot PWA.
+Na GitHub naloži vse datoteke iz ZIP-a in prepiši stare.
+Če iPhone kaže staro različico, odstrani aplikacijo z začetnega zaslona, odpri povezavo v Safariju, osveži in ponovno izberi Dodaj na začetni zaslon.
 
-POMEMBNO:
-Datoteke morajo biti objavljene na HTTPS spletnem gostovanju, da PWA, kamera in storitveni delavec delujejo pravilno.
-iCloud Drive ni spletni strežnik. Lahko ga uporabljaš za hranjenje ZIP-a ter izvoznih JSON varnostnih kopij.
+Vključeno: nova ikona, animacije, temni način, meritve, pametni pomočnik, dnevnik, stroški, zaloga, opomniki, grafi, vreme, sezona, JSON/CSV/PDF in Siri navodila.
+
+Omejitve: pravi widget, Apple Watch, Live Activities, popolna iCloud/CloudKit sinhronizacija in neposredni Bluetooth senzorji zahtevajo domačo iOS aplikacijo.
