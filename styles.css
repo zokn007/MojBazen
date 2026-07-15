@@ -1,1 +1,302 @@
 :root{--card:#fff;--ink:#123248;--muted:#687f90;--line:#d8e7ef;--accent:#0878b8;--ok:#15785a;--warn:#a56800;--bad:#ad3737;--shadow:0 12px 30px rgba(16,62,91,.09)}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#e6f7fd,#f7fbfd 34%,#eef8fc);color:var(--ink);min-height:100vh}body.dark{--card:#132b3b;--ink:#eff9fd;--muted:#a9bfcc;--line:#2a5066;--shadow:0 12px 30px rgba(0,0,0,.28);background:#0c1c28}.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#076ba7,#14a6c8);color:#fff;padding:22px 16px 45px;border-radius:0 0 32px 32px}.brand{display:flex;align-items:center;gap:12px;position:relative;z-index:2}.brand img{width:60px;height:60px;border-radius:18px;box-shadow:0 8px 22px rgba(0,0,0,.2)}.brand h1{margin:0;font-size:29px;line-height:1}.brand small{display:block;margin-top:6px;font-size:12px;opacity:.94}.hero p{position:relative;z-index:2;margin:17px 0 0;max-width:650px;opacity:.92}.bubble{position:absolute;border-radius:50%;background:rgba(255,255,255,.16);animation:rise 8s linear infinite}.b1{width:16px;height:16px;left:12%;bottom:-20px}.b2{width:11px;height:11px;left:38%;bottom:-20px;animation-delay:2s}.b3{width:20px;height:20px;left:68%;bottom:-20px;animation-delay:4s}.b4{width:12px;height:12px;left:86%;bottom:-20px;animation-delay:1s}@keyframes rise{to{transform:translateY(-220px);opacity:0}}main{max-width:980px;margin:-24px auto 0;padding:0 13px 45px;position:relative;z-index:3}.menu-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-bottom:14px}.menu-grid button{margin:0;min-height:58px;padding:7px 4px;font-size:11px;background:#e2f0f7;color:#205b79;border:1px solid #cfe3ed}.menu-grid button.active{background:var(--accent);color:#fff}.menu-icon{display:block;font-size:19px;margin-bottom:3px}section{display:none}section.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}h2{font-size:19px;margin:0 0 12px}label{display:block;font-size:13px;color:var(--muted);margin:9px 0 5px}input,select,textarea,button{width:100%;padding:11px 12px;border:1px solid #c9dbe5;border-radius:12px;font:inherit;background:#fff;color:#17364b}body.dark input,body.dark select,body.dark textarea{background:#102838;color:#eef8fc;border-color:#35586d}button{border:0;background:var(--accent);color:#fff;font-weight:700;margin-top:10px;cursor:pointer}button.secondary{background:#e5f2f8;color:#17618b}button.danger{background:#f9e5e5;color:var(--bad)}.metric{font-size:12px;color:var(--muted)}.metric b{display:block;font-size:21px;color:var(--ink);margin-top:3px}.small{font-size:12px;color:var(--muted);line-height:1.48}.status{padding:11px 12px;border-radius:14px;margin-top:9px;line-height:1.45;font-size:14px}.ok{background:#e7f5ef;color:var(--ok)}.warn{background:#fff1d8;color:var(--warn)}.bad{background:#fbe7e7;color:var(--bad)}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.task,.stock,.log{border:1px solid var(--line);border-radius:15px;padding:12px;margin:9px 0}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:8px 5px;border-bottom:1px solid var(--line)}canvas.chart{width:100%;height:235px;border:1px solid var(--line);border-radius:14px;background:#fff}body.dark canvas.chart{background:#102838}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#e5f2f8;color:#235d7e;font-size:12px;margin:3px 4px 3px 0}.watch-link{display:flex;align-items:center;gap:12px}.watch-link img{width:52px;height:52px;border-radius:15px}@media(max-width:760px){.grid4{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr 1fr}}@media(max-width:520px){.menu-grid{gap:4px}.menu-grid button{font-size:9px;min-height:54px;padding:5px 1px}.menu-icon{font-size:17px}.actions{grid-template-columns:1fr}.brand h1{font-size:27px}}
+
+.main-logo{display:block;width:min(440px,90vw);height:auto;position:relative;z-index:2;border-radius:20px}
+.version{position:absolute;right:18px;top:14px;z-index:3;color:#fff;font-size:12px}
+@media(max-width:600px){
+.compact-hero{height:52px;padding:0;border-radius:0 0 24px 24px}
+}
+
+
+
+
+
+
+
+
+
+
+.profile-brand-card{text-align:center}.profile-brand-card img{display:block;width:min(380px,90%);margin:0 auto 8px;border-radius:16px}
+@media(max-width:760px){
+  
+}
+@media(max-width:430px){
+  
+  
+  
+  
+  
+}
+
+.overview-row{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:14px;
+  align-items:stretch;
+}
+.overview-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  min-height:122px;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  text-align:center;
+}
+.overview-label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:6px;
+}
+.overview-card>b{
+  color:var(--ink);
+  font-size:25px;
+  line-height:1.15;
+}
+.multitab-overview{
+  text-align:left;
+  justify-content:space-between;
+  padding:11px;
+}
+.multitab-top{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+.percent-ring{
+  --p:0;
+  width:68px;
+  height:68px;
+  flex:0 0 68px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:conic-gradient(#0878b8 calc(var(--p)*1%),#dbeaf1 0);
+  position:relative;
+}
+.percent-ring:before{
+  content:"";
+  position:absolute;
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:var(--card);
+}
+.percent-ring-inner{
+  position:relative;
+  z-index:1;
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  line-height:1;
+}
+.percent-ring-inner b{font-size:18px}
+.percent-ring-inner span{font-size:9px;color:var(--muted)}
+.multitab-details{
+  min-width:0;
+}
+.multitab-details .overview-label{
+  margin-bottom:2px;
+}
+.multitab-details>b{
+  display:block;
+  font-size:18px;
+  color:var(--ink);
+  white-space:nowrap;
+}
+.multitab-details small{
+  display:block;
+  color:var(--muted);
+  font-size:9px;
+  margin-top:2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.multitab-buttons{
+  display:grid;
+  grid-template-columns:54px 1fr;
+  gap:5px;
+  margin-top:7px;
+}
+.multitab-buttons button{
+  margin:0;
+  padding:6px 5px;
+  min-height:28px;
+  border-radius:8px;
+  font-size:9px;
+  line-height:1.1;
+}
+.profile-info-card{
+  text-align:center;
+}
+.profile-info-card img{
+  display:block;
+  width:min(350px,88%);
+  margin:0 auto 12px;
+  border-radius:16px;
+}
+.profile-info-card h2{
+  margin-bottom:7px;
+}
+.profile-info-card p{
+  max-width:620px;
+  margin:0 auto 12px;
+  color:var(--muted);
+  line-height:1.5;
+}
+.app-version{
+  display:inline-block;
+  padding:7px 11px;
+  border-radius:999px;
+  background:#e5f2f8;
+  color:#17618b;
+  font-size:12px;
+}
+@media(max-width:760px){
+  .overview-row{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:7px;
+  }
+  .overview-card{
+    min-height:108px;
+    padding:10px 6px;
+  }
+  .overview-card>b{
+    font-size:20px;
+  }
+  .multitab-overview{
+    padding:7px;
+  }
+  .percent-ring{
+    width:54px;
+    height:54px;
+    flex-basis:54px;
+  }
+  .percent-ring:before{
+    width:41px;
+    height:41px;
+  }
+  .percent-ring-inner b{
+    font-size:15px;
+  }
+  .multitab-top{
+    gap:5px;
+  }
+  .multitab-details>b{
+    font-size:14px;
+  }
+  .multitab-buttons{
+    grid-template-columns:43px 1fr;
+    gap:3px;
+  }
+  .multitab-buttons button{
+    font-size:8px;
+    padding:5px 2px;
+  }
+}
+@media(max-width:480px){
+  .overview-row{
+    gap:5px;
+  }
+  .overview-card{
+    min-height:102px;
+    border-radius:14px;
+    padding:8px 4px;
+  }
+  .overview-label{
+    font-size:10px;
+  }
+  .overview-card>b{
+    font-size:18px;
+  }
+  .multitab-overview{
+    padding:6px 4px;
+  }
+  .percent-ring{
+    width:46px;
+    height:46px;
+    flex-basis:46px;
+  }
+  .percent-ring:before{
+    width:35px;
+    height:35px;
+  }
+  .percent-ring-inner b{
+    font-size:13px;
+  }
+  .multitab-details>b{
+    font-size:12px;
+  }
+  .multitab-details small{
+    font-size:8px;
+  }
+  .multitab-buttons{
+    grid-template-columns:38px 1fr;
+  }
+  .multitab-buttons button{
+    font-size:7.5px;
+    min-height:25px;
+  }
+}
+
+/* v4.7: fiksna enovrstična razporeditev prvega zaslona */
+.overview-row{
+  display:grid !important;
+  grid-template-columns:minmax(78px,.75fr) minmax(62px,.58fr) minmax(72px,.68fr) minmax(188px,1.85fr) !important;
+  gap:8px !important;
+  align-items:stretch !important;
+  overflow-x:auto;
+  padding-bottom:2px;
+}
+.overview-card{
+  min-width:0 !important;
+  min-height:116px !important;
+  padding:12px 8px !important;
+  border-radius:17px !important;
+}
+.multitab-overview{
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:space-between !important;
+  padding:8px !important;
+}
+.multitab-top{display:flex !important;align-items:center !important;gap:7px !important;min-width:0}
+.percent-ring{width:58px !important;height:58px !important;flex:0 0 58px !important}
+.percent-ring:before{width:44px !important;height:44px !important}
+.percent-ring-inner b{font-size:15px !important}
+.multitab-details>b{font-size:14px !important}
+.multitab-details small{font-size:8px !important;max-width:105px}
+.multitab-buttons{
+  display:grid !important;
+  grid-template-columns:52px minmax(90px,1fr) !important;
+  gap:5px !important;
+  width:100% !important;
+  margin-top:5px !important;
+}
+.multitab-buttons button{
+  width:100% !important;
+  margin:0 !important;
+  padding:5px 4px !important;
+  min-height:26px !important;
+  font-size:8px !important;
+  border-radius:8px !important;
+  white-space:nowrap !important;
+}
+@media(max-width:520px){
+  .overview-row{
+    grid-template-columns:72px 56px 66px 178px !important;
+    gap:5px !important;
+  }
+  .overview-card{min-height:108px !important;padding:8px 5px !important}
+  .overview-label{font-size:9px !important}
+  .overview-card>b{font-size:17px !important}
+  .percent-ring{width:50px !important;height:50px !important;flex-basis:50px !important}
+  .percent-ring:before{width:38px !important;height:38px !important}
+  .multitab-buttons{grid-template-columns:45px 1fr !important;gap:3px !important}
+  .multitab-buttons button{font-size:7px !important;padding:4px 2px !important}
+}

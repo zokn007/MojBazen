@@ -1,16 +1,10 @@
-MOJ BAZEN v4.3 — by Davor Gričnik
+MOJBAZEN v4.7 — by Davor Gričnik
 
-Spremembe:
-- vsi menijski gumbi so vidni na prvem zaslonu,
-- odstranjena grafika bazena z napisom POOL,
-- nova simetrična ikona vodne kapljice,
-- ponavljajoči koledarski dogodek vsakih X dni,
-- opomnik ob 09:00 samo na dan dogodka,
-- 7-dnevni vremenski graf,
-- posamično brisanje zaloge in brisanje vse zaloge,
-- več Planet Pool izdelkov, vključno z Multitab 200 g,
-- poseben Apple Watch spletni pregled na watch.html.
+Popravljeno:
+- odpravljena CSS napaka z manjkajočim zaključnim oklepajem,
+- Prostornina, pH, Klor in Multitab so zaklenjeni v isti vrstici,
+- Multitab ima majhen krožni odstotni graf,
+- gumba Potek in Dodaj v koledar sta majhna in v isti vrstici,
+- opis aplikacije in verzija sta v Profilu.
 
-Apple Watch pogled je spletni pregled, ne prava watchOS aplikacija. Za pravo sinhronizirano aplikacijo na uri je potrebna nativna iOS/watchOS aplikacija.
-
-Na GitHub naloži in prepiši vse datoteke iz ZIP-a. Nato odstrani staro ikono aplikacije z začetnega zaslona, počisti podatke strani github.io in aplikacijo ponovno dodaj.
+Na GitHub prepiši vse datoteke iz ZIP-a.

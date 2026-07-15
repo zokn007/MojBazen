@@ -1,14 +1,105 @@
-<!doctype html><html lang="sl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0878b8"><title>Moj bazen by Davor Gričnik</title><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="stylesheet" href="styles.css"></head><body>
-<header class="hero"><div class="brand"><img src="icon-192.png" alt="Moj bazen"><div><h1>Moj bazen</h1><small>by Davor Gričnik · v4.3</small></div></div><p>Pametni pregled meritev, kemikalij, opomnikov, zaloge in vremena.</p><span class="bubble b1"></span><span class="bubble b2"></span><span class="bubble b3"></span><span class="bubble b4"></span></header>
-<main><nav class="menu-grid"><button data-tab="home" class="active"><span class="menu-icon">🏠</span>Pregled</button><button data-tab="measure"><span class="menu-icon">🧪</span>Meritev</button><button data-tab="assistant"><span class="menu-icon">🤖</span>Pomočnik</button><button data-tab="logs"><span class="menu-icon">📝</span>Dnevnik</button><button data-tab="stock"><span class="menu-icon">📦</span>Zaloga</button><button data-tab="tasks"><span class="menu-icon">🔔</span>Opomniki</button><button data-tab="charts"><span class="menu-icon">📈</span>Grafi</button><button data-tab="weather"><span class="menu-icon">☀️</span>Vreme</button><button data-tab="data"><span class="menu-icon">💾</span>Podatki</button><button data-tab="settings"><span class="menu-icon">⚙️</span>Profil</button></nav>
-<section id="home" class="active"><div class="grid4"><div class="card"><div class="metric">Bazen<b id="dName">–</b></div></div><div class="card"><div class="metric">Prostornina<b id="dVol">–</b></div></div><div class="card"><div class="metric">pH<b id="dPh">–</b></div></div><div class="card"><div class="metric">Klor<b id="dCl">–</b></div></div></div><div class="card"><h2>Današnja analiza</h2><div id="advice" class="status warn">Najprej nastavi profil in dodaj meritev.</div><div id="todayPlan"></div></div><div class="grid"><div class="card"><h2>Naslednja opravila</h2><div id="homeTasks"></div></div><div class="card"><h2>Apple Watch pregled</h2><a class="watch-link" href="watch.html"><img src="icon-192.png"><div><b>Odpri poenostavljen pregled</b><div class="small">pH, klor, temperatura in naslednje opravilo</div></div></a></div></div></section>
-<section id="measure"><div class="card"><h2>Nova meritev</h2><div class="grid3"><div><label>pH</label><input id="mPh" type="number" step="0.1"></div><div><label>Prosti klor mg/l</label><input id="mCl" type="number" step="0.1"></div><div><label>Temperatura °C</label><input id="mTemp" type="number" step="0.1"></div><div><label>TA mg/l</label><input id="mTa" type="number" step="1"></div><div><label>CYA mg/l</label><input id="mCya" type="number" step="1"></div><div><label>CH mg/l</label><input id="mCh" type="number" step="1"></div></div><label>Opomba</label><textarea id="mNote" rows="3"></textarea><button id="saveMeasurementBtn">Shrani meritev</button><div id="mMsg"></div></div></section>
-<section id="assistant"><div class="card"><h2>Pametni pomočnik</h2><label>Izdelek</label><select id="product"></select><div class="grid"><div><label>Trenutna vrednost</label><input id="currentValue" type="number" step="0.1"></div><div><label>Ciljna vrednost</label><input id="targetValue" type="number" step="0.1"></div></div><button id="calcChemicalBtn">Izračunaj odmerek</button><div id="chemResult"></div></div><div class="card"><h2>Varnost</h2><div class="small">Najprej uravnaj pH, nato klor. Izdelkov ne mešaj neposredno med seboj. Vedno imajo prednost navodila na embalaži.</div></div></section>
-<section id="logs"><div class="card"><h2>Dnevnik vzdrževanja</h2><div class="grid"><div><label>Opravilo</label><select id="logType"><option>Dodan klor</option><option>Dodan pH minus</option><option>Dodan pH plus</option><option>Dodan algecid</option><option>Izpran filter</option><option>Robotsko sesanje</option><option>Očiščena vodna linija</option><option>Delna menjava vode</option><option>Drugo</option></select></div><div><label>Količina</label><input id="logAmount"></div></div><label>Strošek €</label><input id="logCost" type="number" step="0.01"><label>Opomba</label><textarea id="logNote" rows="2"></textarea><button id="addLogBtn">Dodaj v dnevnik</button></div><div class="card"><h2>Vnosi</h2><div id="logList"></div></div></section>
-<section id="stock"><div class="card"><h2>Zaloga kemikalij</h2><div class="grid"><div><label>Naziv</label><input id="stockName"></div><div><label>Količina</label><input id="stockQty" type="number" step="0.1"></div><div><label>Enota</label><select id="stockUnit"><option>g</option><option>kg</option><option>ml</option><option>l</option><option>kos</option></select></div><div><label>Opozori pod</label><input id="stockMin" type="number" step="0.1"></div></div><button id="addStockBtn">Dodaj izdelek</button></div><div class="card"><h2>Pregled zaloge</h2><div id="stockList"></div><button class="danger" id="clearStockBtn">Izbriši vso zalogo</button></div></section>
+<!doctype html><html lang="sl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0878b8"><title>MojBazen</title>
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="stylesheet" href="styles.css">
+</head><body>
+<header class="hero compact-hero">
+<span class="bubble b1"></span><span class="bubble b2"></span><span class="bubble b3"></span><span class="bubble b4"></span>
+</header>
+<main>
+<nav class="menu-grid">
+<button data-tab="home" class="active"><span class="menu-icon">🏠</span>Pregled</button>
+<button data-tab="measure"><span class="menu-icon">🧪</span>Meritev</button>
+<button data-tab="assistant"><span class="menu-icon">🤖</span>Pomočnik</button>
+<button data-tab="logs"><span class="menu-icon">📝</span>Dnevnik</button>
+<button data-tab="stock"><span class="menu-icon">📦</span>Zaloga</button>
+<button data-tab="tasks"><span class="menu-icon">🔔</span>Opomniki</button>
+<button data-tab="charts"><span class="menu-icon">📈</span>Grafi</button>
+<button data-tab="weather"><span class="menu-icon">☀️</span>Vreme</button>
+<button data-tab="data"><span class="menu-icon">💾</span>Podatki</button>
+<button data-tab="settings"><span class="menu-icon">⚙️</span>Profil</button>
+</nav>
+
+<section id="home" class="active">
+<div class="overview-row">
+  <div class="overview-card">
+    <span class="overview-label">Prostornina</span>
+    <b id="dVol">–</b>
+  </div>
+
+  <div class="overview-card">
+    <span class="overview-label">pH</span>
+    <b id="dPh">–</b>
+  </div>
+
+  <div class="overview-card">
+    <span class="overview-label">Klor</span>
+    <b id="dCl">–</b>
+  </div>
+
+  <div class="overview-card multitab-overview" id="multitabCard">
+    <div class="multitab-top">
+      <div class="percent-ring" id="multitabRing">
+        <div class="percent-ring-inner">
+          <b id="multiPercent">–</b>
+          <span>%</span>
+        </div>
+      </div>
+      <div class="multitab-details">
+        <span class="overview-label">Multitab</span>
+        <b><span id="multiDays">–</span> dni</b>
+        <small id="multiText">Ni nastavljen</small>
+      </div>
+    </div>
+    <div class="multitab-buttons">
+      <button id="setMultitabBtn">Potek</button>
+      <button class="secondary" id="calendarMultitabBtn">Dodaj v koledar</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Današnja analiza</h2>
+  <div id="advice" class="status warn">Najprej nastavi profil in dodaj meritev.</div>
+  <div id="todayPlan"></div>
+</div>
+
+<div class="card">
+  <h2>Naslednja opravila</h2>
+  <div id="homeTasks"></div>
+</div>
+</section>
+
+<section id="measure"><div class="card"><h2>Nova meritev</h2><div class="grid3">
+<div><label>pH</label><input id="mPh" type="number" step="0.1"></div>
+<div><label>Prosti klor mg/l</label><input id="mCl" type="number" step="0.1"></div>
+<div><label>Temperatura °C</label><input id="mTemp" type="number" step="0.1"></div>
+</div><label>Opomba</label><textarea id="mNote" rows="3"></textarea><button id="saveMeasurementBtn">Shrani meritev</button><div id="mMsg"></div></div></section>
+
+<section id="assistant"><div class="card"><h2>Pametni pomočnik</h2><label>Izdelek</label><select id="product"></select>
+<div class="grid"><div><label>Trenutna vrednost</label><input id="currentValue" type="number" step="0.1"></div><div><label>Ciljna vrednost</label><input id="targetValue" type="number" step="0.1"></div></div>
+<button id="calcChemicalBtn">Izračunaj odmerek</button><div id="chemResult"></div></div>
+<div class="card"><h2>Varnost</h2><div class="small">Najprej uravnaj pH, nato klor. Izdelkov ne mešaj neposredno med seboj. Vedno imajo prednost navodila na embalaži.</div></div></section>
+
+<section id="logs"><div class="card"><h2>Dnevnik vzdrževanja</h2><div class="grid"><div><label>Opravilo ali sredstvo</label><select id="logType">
+<option>Planet Pool Multitab 200 g</option><option>Planet Pool Flockstar</option><option>Planet Pool pH Minus</option><option>Planet Pool pH Plus</option><option>Planet Pool klor granulat</option><option>Planet Pool algecid</option>
+<option>Arekina pH Minus</option><option>Arekina pH Plus</option><option>Arekina klor</option><option>Arekina algecid</option><option>Arekina kosmičenje</option>
+<option>Izpran filter</option><option>Robotsko sesanje</option><option>Očiščena vodna linija</option><option>Delna menjava vode</option><option>Drugo</option>
+</select></div><div><label>Količina</label><input id="logAmount"></div></div><label>Strošek €</label><input id="logCost" type="number" step="0.01"><label>Opomba</label><textarea id="logNote" rows="2"></textarea><button id="addLogBtn">Dodaj v dnevnik</button></div><div class="card"><h2>Vnosi</h2><div id="logList"></div></div></section>
+
+<section id="stock"><div class="card"><h2>Zaloga kemikalij</h2><label>Izberi artikel</label><select id="stockCatalog"></select>
+<div class="grid"><div><label>Naziv</label><input id="stockName"></div><div><label>Količina</label><input id="stockQty" type="number" step="0.1"></div><div><label>Enota</label><select id="stockUnit"><option>g</option><option>kg</option><option>ml</option><option>l</option><option>kos</option></select></div><div><label>Opozori pod</label><input id="stockMin" type="number" step="0.1"></div></div><button id="addStockBtn">Dodaj izdelek</button></div><div class="card"><h2>Pregled zaloge</h2><div id="stockList"></div><button class="danger" id="clearStockBtn">Izbriši vso zalogo</button></div></section>
+
 <section id="tasks"><div class="card"><h2>Ponavljajoči koledarski opomniki</h2><p class="small">Interval »vsakih X dni« se zapiše v koledarski dogodek. Obvestilo je ob 09:00 samo na določen dan.</p><div id="taskList"></div><button class="secondary" id="requestNotificationsBtn">Dovoli obvestila aplikacije</button></div></section>
-<section id="charts"><div class="card"><h2>Graf meritev</h2><select id="chartMetric"><option value="ph">pH</option><option value="cl">Prosti klor</option><option value="temp">Temperatura</option><option value="ta">TA</option><option value="cya">CYA</option><option value="ch">CH</option></select></div><div class="card"><canvas id="mainChart" class="chart" width="900" height="240"></canvas></div></section>
-<section id="weather"><div class="card"><h2>7-dnevna vremenska napoved</h2><button id="loadWeatherBtn">Pridobi napoved za mojo lokacijo</button><div id="weatherSummary"></div></div><div class="card"><h2>Temperatura in padavine</h2><canvas id="weatherChart" class="chart" width="900" height="260"></canvas></div></section>
+<section id="charts"><div class="card"><h2>Graf meritev</h2><select id="chartMetric"><option value="ph">pH</option><option value="cl">Prosti klor</option><option value="temp">Temperatura</option></select></div><div class="card"><canvas id="mainChart" class="chart" width="900" height="240"></canvas></div></section>
+<section id="weather"><div class="card"><h2>7-dnevna vremenska napoved</h2><button id="loadWeatherBtn">Pridobi napoved za mojo lokacijo</button><div id="weatherSummary"></div></div><div class="card"><canvas id="weatherChart" class="chart" width="900" height="260"></canvas></div></section>
 <section id="data"><div class="card"><h2>Podatki</h2><div class="actions"><button id="exportJsonBtn">Izvozi varnostno kopijo</button><button class="secondary" id="importJsonBtn">Uvozi varnostno kopijo</button><button id="exportCsvBtn">Izvozi CSV</button><button class="secondary" id="printBtn">Natisni / PDF</button></div><input id="importFile" type="file" accept=".json" hidden></div><div class="card"><h2>Zgodovina meritev</h2><div style="overflow:auto"><table><thead><tr><th>Datum</th><th>pH</th><th>Klor</th><th>°C</th><th></th></tr></thead><tbody id="historyBody"></tbody></table></div></div></section>
-<section id="settings"><div class="card"><h2>Profil bazena</h2><label>Ime bazena</label><input id="sName"><div class="grid"><div><label>Dolžina m</label><input id="sL" type="number" step="0.1"></div><div><label>Širina m</label><input id="sW" type="number" step="0.1"></div><div><label>Povprečna globina m</label><input id="sD" type="number" step="0.1"></div><div><label>Prostornina po meri m³</label><input id="sV" type="number" step="0.1"></div></div><button id="saveProfileBtn">Shrani profil</button><div id="sMsg"></div></div><div class="card"><button class="secondary" id="darkModeBtn">Preklopi temni način</button></div></section>
+<section id="settings">
+<div class="card profile-info-card">
+  <img src="logo-mojbazen.svg" alt="MojBazen">
+  <h2>MojBazen by Davor Gričnik</h2>
+  <p>Preprosta aplikacija za pregled meritev, vzdrževanje bazena, zalogo kemikalij, vremensko napoved in odštevanje sredstva Multitab.</p>
+  <div class="app-version">Verzija programa: <b>v4.7</b></div>
+</div>
+<div class="card"><h2>Mere bazena</h2><label>Ime bazena</label><input id="sName"><div class="grid3"><div><label>Dolžina m</label><input id="sL" type="number" step="0.1"></div><div><label>Širina m</label><input id="sW" type="number" step="0.1"></div><div><label>Višina vode m</label><input id="sH" type="number" step="0.1"></div></div><div id="volumePreview" class="status ok">Izračunana prostornina: –</div><button id="saveProfileBtn">Shrani profil</button><div id="sMsg"></div></div><div class="card"><button class="secondary" id="darkModeBtn">Preklopi temni način</button></div></section>
 </main><script src="app.js"></script></body></html>
