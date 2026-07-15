@@ -1,0 +1,16 @@
+MOJ BAZEN 3
+
+Glavne funkcije:
+- profil bazena in izračun prostornine,
+- meritve pH, klora, temperature, TA, CYA in CH,
+- grafi pH in klora,
+- fotografiranje testnega lističa z orientacijskim barvnim odčitkom,
+- knjižnica izdelkov Steinbach, Bayrol in Planet Pool,
+- orientacijski samodejni izračun odmerkov,
+- ponavljajoča opravila in koledarski opomniki,
+- izvoz/uvoz varnostne kopije prek iCloud Drive,
+- delovanje brez interneta po namestitvi kot PWA.
+
+POMEMBNO:
+Datoteke morajo biti objavljene na HTTPS spletnem gostovanju, da PWA, kamera in storitveni delavec delujejo pravilno.
+iCloud Drive ni spletni strežnik. Lahko ga uporabljaš za hranjenje ZIP-a ter izvoznih JSON varnostnih kopij.

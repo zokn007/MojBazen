@@ -1,0 +1,9 @@
+{
+  "name": "Moj bazen 3",
+  "short_name": "Moj bazen",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#eef6fb",
+  "theme_color": "#0878b8",
+  "icons": []
+}
