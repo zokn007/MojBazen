@@ -1,10 +1,10 @@
-MOJBAZEN v4.7 — by Davor Gričnik
+MojBazen v4.10
 
-Popravljeno:
-- odpravljena CSS napaka z manjkajočim zaključnim oklepajem,
-- Prostornina, pH, Klor in Multitab so zaklenjeni v isti vrstici,
-- Multitab ima majhen krožni odstotni graf,
-- gumba Potek in Dodaj v koledar sta majhna in v isti vrstici,
-- opis aplikacije in verzija sta v Profilu.
+Novosti:
+- odstranjen je celoten zgornji pas aplikacije,
+- nova naložena ikona je uporabljena na zagonskem zaslonu,
+- ista ikona je uporabljena kot PWA ikona, ikona na namizju, favicon in v razdelku Profil/O aplikaciji,
+- dodan je temen zagonski zaslon z animacijo nalaganja,
+- ohranjen je dizajn in funkcionalnost prejšnje različice, vključno s kalkulatorjem kemikalij.
 
-Na GitHub prepiši vse datoteke iz ZIP-a.
+Za pravilno posodobitev nameščene PWA odstranite staro ikono aplikacije z namizja in jo nato ponovno dodajte iz brskalnika.

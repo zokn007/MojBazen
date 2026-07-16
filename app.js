@@ -6,19 +6,24 @@ const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 const KEYS={profile:"poolProfile44",measurements:"poolMeasurements44",logs:"poolLogs44",stock:"poolStock44",tasks:"poolTasks44",dark:"poolDark44",multitab:"poolMultitab44"};
 
 const products=[
-{name:"Planet Pool Multitab 200 g",kind:"maintenance",note:"Počasi topna večnamenska 200 g tableta. Odmerek upoštevaj po embalaži."},
-{name:"Planet Pool Flockstar",kind:"flocculant",unit:"ml",factor:100,perM3:10,delta:1},
-{name:"Planet Pool pH Minus",kind:"phMinus",unit:"g",factor:100,perM3:10,delta:.1},
-{name:"Planet Pool pH Plus",kind:"phPlus",unit:"g",factor:100,perM3:10,delta:.1},
-{name:"Planet Pool klor granulat",kind:"chlorine",unit:"g",factor:20,perM3:10,delta:1},
-{name:"Planet Pool hitro topne klor tablete",kind:"chlorine",unit:"g",factor:20,perM3:10,delta:1},
-{name:"Planet Pool algecid",kind:"algaecide",unit:"ml",factor:50,perM3:10,delta:1},
-{name:"Planet Pool aktivni kisik",kind:"oxygen",unit:"g",factor:100,perM3:10,delta:1},
-{name:"Arekina pH Minus",kind:"phMinus",unit:"g",factor:100,perM3:10,delta:.1},
-{name:"Arekina pH Plus",kind:"phPlus",unit:"g",factor:100,perM3:10,delta:.1},
-{name:"Arekina klor granulat",kind:"chlorine",unit:"g",factor:20,perM3:10,delta:1},
-{name:"Arekina algecid",kind:"algaecide",unit:"ml",factor:50,perM3:10,delta:1},
-{name:"Arekina sredstvo za kosmičenje",kind:"flocculant",unit:"ml",factor:100,perM3:10,delta:1}
+{name:"Planet Pool pH Minus granulat",kind:"ph",direction:"down",unit:"g",base:150,perM3:10,delta:.2,source:"Planet Pool deklaracija: 150 g na 10 m³ zniža pH približno za 0,2.",instructions:"Najprej raztopi v vedru vode in počasi vlij ob robu. Pri trdi vodi je lahko potreben večji odmerek."},
+{name:"Planet Pool pH Minus tekoči",kind:"ph",direction:"down",unit:"ml",base:100,perM3:10,delta:.2,source:"Planet Pool deklaracija: 100 ml na 10 m³ zniža pH približno za 0,2.",instructions:"Razredči po deklaraciji in počasi vlij ob robu, ne v bližini kovinskih delov."},
+{name:"Planet Pool pH Plus",kind:"ph",direction:"up",unit:"g",base:100,perM3:10,delta:.2,source:"Planet Pool navodilo: 100 g na 10 m³ zviša pH približno za 0,2.",instructions:"Dodajaj postopoma in med odmerki ponovno izmeri pH."},
+{name:"Planet Pool klor granulat",kind:"modes",unit:"g",modes:[
+ {id:"first",label:"Prvo polnjenje",baseMin:80,baseMax:100,perM3:10},
+ {id:"regular",label:"Redno – vsakih 3 dni",baseMin:50,baseMax:50,perM3:10},
+ {id:"shock",label:"Sunkovito kloriranje",baseMin:80,baseMax:100,perM3:10}],source:"Planet Pool deklaracija za klor granulat.",instructions:"Praviloma dodaj zvečer. Granulat najprej raztopi v vedru vode. Pred kopanjem izmeri klor in pH."},
+{name:"Planet Pool Algicid Standard",kind:"modes",unit:"ml",modes:[
+ {id:"first",label:"Prvo doziranje",baseMin:100,baseMax:100,perM3:10},
+ {id:"weekly",label:"Tedensko vzdrževanje",baseMin:50,baseMax:50,perM3:10},
+ {id:"attack",label:"Napad alg",baseMin:250,baseMax:250,perM3:10}],source:"Planet Pool deklaracija za Algicid Standard.",instructions:"Najprej razredči v vedru vode in počasi vlij ob robu bazena."},
+{name:"Planet Pool Algicid Special",kind:"modes",unit:"ml",modes:[
+ {id:"first",label:"Prvo doziranje",baseMin:150,baseMax:200,perM3:10},
+ {id:"weekly",label:"Tedensko vzdrževanje",baseMin:100,baseMax:150,perM3:10},
+ {id:"attack",label:"Napad alg",baseMin:300,baseMax:400,perM3:10}],source:"Planet Pool deklaracija za nepeneči Algicid Special.",instructions:"Razredči v vedru vode. Primeren je tudi za bazene s protitokom oziroma masažne bazene."},
+{name:"Planet Pool Flockstar tekoči",kind:"modes",unit:"ml",modes:[{id:"clear",label:"Bistrenje vode",baseMin:50,baseMax:100,perM3:10}],source:"Planet Pool deklaracija: 50–100 ml na 10 m³.",instructions:"Pri peščenem filtru vlij v skimer ob delujočem filtru in po 2–3 dneh povratno izperi. Pri kartušnem filtru upoštevaj posebna navodila deklaracije."},
+{name:"Planet Pool Multitab 200 g",kind:"tablet",unit:"tableta",base:1,perM3:25,source:"Običajno odmerjanje za 200 g večnamenske tablete: 1 tableta na približno 25 m³; vedno preveri svojo deklaracijo.",instructions:"Tableto daj v plavajoči dozator ali skimer, nikoli neposredno na folijo."},
+{name:"Arekina / Arkina izdelek – odmerek z embalaže",kind:"manual",unit:"g/ml",source:"Za izdelke Arekina/Arkina v javno dostopnih virih ni bilo mogoče zanesljivo potrditi enotne deklaracije.",instructions:"Vnesi odmerek, ki je naveden na tvoji embalaži, aplikacija pa ga bo natančno preračunala na prostornino bazena."}
 ];
 const stockCatalog=[
 "Planet Pool Multitab 200 g","Planet Pool Flockstar","Planet Pool pH Minus","Planet Pool pH Plus","Planet Pool klor granulat","Planet Pool hitro topne klor tablete","Planet Pool algecid","Planet Pool aktivni kisik",
@@ -45,9 +50,40 @@ function saveProfile(){set(KEYS.profile,{name:$("sName").value||"Domači bazen",
 
 function saveMeasurement(){const ph=Number($("mPh").value),cl=Number($("mCl").value);if(!ph||$("mCl").value===""){$("mMsg").innerHTML='<div class="status bad">Vnesi pH in prosti klor.</div>';return}const a=measurements();a.unshift({id:Date.now(),date:new Date().toISOString(),ph,cl,temp:$("mTemp").value,note:$("mNote").value});set(KEYS.measurements,a);$("mMsg").innerHTML='<div class="status ok">Meritev je shranjena.</div>';refresh()}
 function analysis(m){if(!m)return["warn","Ni meritev.",[]];const text=[],plan=[];if(m.ph<7){text.push("pH je prenizek.");plan.push("Najprej dodaj pH plus.")}else if(m.ph>7.4){text.push("pH je previsok.");plan.push("Najprej dodaj pH minus.")}else text.push("pH je v ciljnem območju.");if(m.cl<.5){text.push("Klor je prenizek.");plan.push("Po uravnanju pH dodaj klor.")}else if(m.cl>1.5){text.push("Klor je visok.");plan.push("Ne dodajaj klora.")}else text.push("Klor je v običajnem območju.");return[(m.ph>=7&&m.ph<=7.4&&m.cl>=.5&&m.cl<=1.5)?"ok":"warn",text.join(" "),plan]}
-function refresh(){const p=profile(),m=measurements()[0],a=analysis(m);$("dVol").textContent=volume()?volume().toFixed(1)+" m³":"–";$("dPh").textContent=m?.ph??"–";$("dCl").textContent=m?m.cl+" mg/l":"–";$("advice").className="status "+a[0];$("advice").textContent=a[1];$("todayPlan").innerHTML=a[2].length?"<ul>"+a[2].map(x=>"<li>"+x+"</li>").join("")+"</ul>":"";renderHomeTasks();renderMultitab();checkMultitabNotifications()}
+function refresh(){const p=profile(),m=measurements()[0],a=analysis(m);$("dVol").textContent=volume()?volume().toFixed(1)+" m³":"–";$("helperVolume").textContent=volume()?volume().toFixed(1)+" m³":"–";$("dPh").textContent=m?.ph??"–";$("dCl").textContent=m?m.cl+" mg/l":"–";$("advice").className="status "+a[0];$("advice").textContent=a[1];$("todayPlan").innerHTML=a[2].length?"<ul>"+a[2].map(x=>"<li>"+x+"</li>").join("")+"</ul>":"";renderHomeTasks();renderMultitab();checkMultitabNotifications()}
 
-function calcChemical(){const p=products[$("product").selectedIndex],v=volume();if(!v){$("chemResult").innerHTML='<div class="status bad">Najprej nastavi mere bazena.</div>';return}if(p.kind==="maintenance"){$("chemResult").innerHTML=`<div class="status warn"><b>${p.name}</b><br>${p.note}</div>`;return}const cur=Number($("currentValue").value),tar=Number($("targetValue").value);const amount=["algaecide","flocculant","oxygen"].includes(p.kind)?p.factor*(v/p.perM3):Math.abs(tar-cur)/p.delta*p.factor*(v/p.perM3);$("chemResult").innerHTML=`<div class="status ok">Orientacijski odmerek: <b>${amount.toFixed(0)} ${p.unit}</b> za ${v.toFixed(1)} m³. Preveri embalažo.</div>`}
+function selectedProduct(){return products[$("product").selectedIndex]}
+function renderTreatmentOptions(){
+ const p=selectedProduct(),sel=$("treatment"),values=$("valueInputs"),manual=$("manualDoseInputs");
+ values.hidden=p.kind!=="ph";manual.hidden=p.kind!=="manual";
+ if(p.kind==="modes")sel.innerHTML=p.modes.map(m=>`<option value="${m.id}">${m.label}</option>`).join("");
+ else if(p.kind==="ph")sel.innerHTML='<option>Preračun po izmerjeni vrednosti</option>';
+ else if(p.kind==="tablet")sel.innerHTML='<option>Vzdrževalni odmerek</option>';
+ else sel.innerHTML='<option>Preračun odmerka z embalaže</option>';
+ sel.disabled=p.kind!=="modes";
+ $("currentLabel").textContent=p.direction==="down"?"Trenutni pH":"Trenutni pH";
+ $("targetLabel").textContent="Ciljni pH";
+ $("doseInfo").innerHTML=`<b>Podlaga:</b> ${p.source}<br>${p.instructions}`;
+}
+function formatDose(min,max,unit){if(Math.abs(min-max)<.01)return `<b>${min.toFixed(min<10?1:0)} ${unit}</b>`;return `<b>${min.toFixed(0)}–${max.toFixed(0)} ${unit}</b>`}
+function calcChemical(){
+ const p=selectedProduct(),v=volume();if(!v){$("chemResult").innerHTML='<div class="status bad">Najprej v Profilu nastavi mere bazena.</div>';return}
+ let min=0,max=0,detail="";
+ if(p.kind==="ph"){
+  const cur=Number($("currentValue").value),tar=Number($("targetValue").value);
+  if(!cur||!tar){$("chemResult").innerHTML='<div class="status bad">Vnesi trenutni in ciljni pH.</div>';return}
+  const diff=p.direction==="down"?cur-tar:tar-cur;
+  if(diff<=0){$("chemResult").innerHTML=`<div class="status warn">Ta izdelek ni potreben: ciljna vrednost ne zahteva ${p.direction==="down"?"znižanja":"zvišanja"} pH.</div>`;return}
+  min=max=diff/p.delta*p.base*(v/p.perM3);detail=`Sprememba pH: ${diff.toFixed(1)}.`;
+ }else if(p.kind==="modes"){
+  const m=p.modes.find(x=>x.id===$("treatment").value)||p.modes[0];min=m.baseMin*(v/m.perM3);max=m.baseMax*(v/m.perM3);detail=m.label+".";
+ }else if(p.kind==="tablet"){
+  min=max=p.base*(v/p.perM3);detail="Za praktično uporabo zaokroži navzgor le, če to dovoljuje deklaracija in meritve klora.";
+ }else{
+  const dose=Number($("manualDose").value),per=Number($("manualPerM3").value);if(!dose||!per){$("chemResult").innerHTML='<div class="status bad">Prepiši odmerek in osnovno prostornino z embalaže.</div>';return}min=max=dose*(v/per);detail="Preračun po vneseni deklaraciji.";
+ }
+ $("chemResult").innerHTML=`<div class="status ok">Za <b>${v.toFixed(1)} m³</b> uporabi ${formatDose(min,max,p.unit)}.<br><span class="small">${detail}</span></div><div class="status warn">Odmerjaj postopoma, po tretmaju ponovno izmeri vodo in ne prekorači navodil na embalaži.</div>`;
+}
 
 function addLog(){const a=get(KEYS.logs,[]);a.unshift({id:Date.now(),date:new Date().toISOString(),type:$("logType").value,amount:$("logAmount").value,cost:Number($("logCost").value||0),note:$("logNote").value});set(KEYS.logs,a);renderLogs()}
 function renderLogs(){const a=get(KEYS.logs,[]);$("logList").innerHTML=a.length?a.map(x=>`<div class="log"><b>${x.type}</b><div class="small">${new Date(x.date).toLocaleString("sl-SI")} · ${x.amount||"brez količine"} · ${x.cost.toFixed(2)} €</div><div>${x.note||""}</div></div>`).join(""):'<div class="small">Ni vnosov.</div>'}
@@ -86,20 +122,42 @@ function calendarMultitab(){const m=multitabData();if(!m){alert("Najprej nastavi
 
 function drawLineChart(canvas,data,series){const ctx=canvas.getContext("2d"),W=canvas.width,H=canvas.height,p={l:48,r:24,t:22,b:38};ctx.clearRect(0,0,W,H);ctx.strokeStyle="#d8e7ef";for(let i=0;i<5;i++){const y=p.t+i*(H-p.t-p.b)/4;ctx.beginPath();ctx.moveTo(p.l,y);ctx.lineTo(W-p.r,y);ctx.stroke()}if(data.length<2){ctx.fillStyle="#687f90";ctx.fillText("Za graf sta potrebni vsaj dve meritvi.",p.l+10,H/2);return}series.forEach((s,si)=>{ctx.strokeStyle=si===0?"#0878b8":"#e68a00";ctx.lineWidth=3;ctx.beginPath();data.forEach((row,i)=>{const x=p.l+i*(W-p.l-p.r)/(data.length-1),y=H-p.b-(Number(row[s.key])-s.min)/(s.max-s.min)*(H-p.t-p.b);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke()})}
 function drawMeasurementChart(){const key=$("chartMetric").value,ranges={ph:[6.5,8],cl:[0,3],temp:[5,40]},range=ranges[key],data=measurements().slice(0,30).reverse();drawLineChart($("mainChart"),data,[{key,min:range[0],max:range[1]}])}
-async function loadWeather(){const summary=$("weatherSummary");summary.innerHTML='<div class="status warn">Pridobivam napoved …</div>';navigator.geolocation.getCurrentPosition(async pos=>{try{const url=`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&forecast_days=7&timezone=auto`;const r=await fetch(url),j=await r.json();const data=j.daily.time.map((date,i)=>({label:new Date(date+"T12:00:00").toLocaleDateString("sl-SI",{weekday:"short"}),max:j.daily.temperature_2m_max[i],min:j.daily.temperature_2m_min[i],rain:j.daily.precipitation_sum[i]}));set("poolWeather44",data);renderWeather(data)}catch{summary.innerHTML='<div class="status bad">Napovedi ni mogoče pridobiti.</div>'}},()=>summary.innerHTML='<div class="status bad">Lokacija ni dovoljena.</div>')}
-function renderWeather(data=get("poolWeather44",[])){if(!data.length)return;$("weatherSummary").innerHTML='<div class="status ok">Oranžna: najvišja temperatura · modra: najnižja · stolpci: padavine.</div>';const c=$("weatherChart"),ctx=c.getContext("2d"),W=c.width,H=c.height,p={l:48,r:28,t:22,b:42};ctx.clearRect(0,0,W,H);data.forEach((x,i)=>{const px=p.l+i*(W-p.l-p.r)/(data.length-1),bh=Math.min(80,x.rain*5);ctx.fillStyle="rgba(24,166,202,.3)";ctx.fillRect(px-14,H-p.b-bh,28,bh)});[["max","#e08122"],["min","#0878b8"]].forEach(([key,color])=>{ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();data.forEach((x,i)=>{const px=p.l+i*(W-p.l-p.r)/(data.length-1),py=H-p.b-(x[key]+5)/45*(H-p.t-p.b);if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py)});ctx.stroke()})}
+function weatherInfo(code){
+  if(code===0)return["☀️","Jasno"];
+  if([1,2].includes(code))return["🌤️","Delno jasno"];
+  if(code===3)return["☁️","Oblačno"];
+  if([45,48].includes(code))return["🌫️","Megla"];
+  if([51,53,55,56,57].includes(code))return["🌦️","Pršenje"];
+  if([61,63,65,66,67,80,81,82].includes(code))return["🌧️","Dež"];
+  if([71,73,75,77,85,86].includes(code))return["🌨️","Sneg"];
+  if([95,96,99].includes(code))return["⛈️","Nevihta"];
+  return["🌤️","Napoved"];
+}
+async function loadWeather(){const summary=$("weatherSummary");summary.innerHTML='<div class="status warn">Pridobivam napoved …</div>';navigator.geolocation.getCurrentPosition(async pos=>{try{const url=`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&forecast_days=7&timezone=auto`;const r=await fetch(url);if(!r.ok)throw new Error("weather");const j=await r.json();const data=j.daily.time.map((date,i)=>({label:new Date(date+"T12:00:00").toLocaleDateString("sl-SI",{weekday:"short"}),max:j.daily.temperature_2m_max[i],min:j.daily.temperature_2m_min[i],rain:j.daily.precipitation_sum[i],code:j.daily.weather_code[i]}));set("poolWeather44",data);renderWeather(data)}catch{summary.innerHTML='<div class="status bad">Napovedi ni mogoče pridobiti.</div>'}},()=>summary.innerHTML='<div class="status bad">Lokacija ni dovoljena.</div>')}
+function renderWeather(data=get("poolWeather44",[])){if(!data.length)return;$("weatherSummary").innerHTML=`<div class="weather-days">${data.map(x=>{const w=weatherInfo(Number(x.code));return`<div class="weather-day" title="${w[1]}"><div class="day">${x.label}</div><div class="weather-icon">${w[0]}</div><div class="temps">${Math.round(x.max)}° / ${Math.round(x.min)}°</div><div class="rain">💧 ${Number(x.rain).toFixed(1)} mm</div></div>`}).join("")}</div><div class="status ok weather-legend">Oranžna črta: najvišja temperatura · modra črta: najnižja · stolpci: padavine.</div>`;const c=$("weatherChart"),ctx=c.getContext("2d"),W=c.width,H=c.height,p={l:48,r:28,t:26,b:48};ctx.clearRect(0,0,W,H);ctx.font="13px -apple-system, sans-serif";data.forEach((x,i)=>{const px=p.l+i*(W-p.l-p.r)/(data.length-1),bh=Math.min(95,Number(x.rain)*6);ctx.fillStyle="rgba(24,166,202,.3)";ctx.fillRect(px-14,H-p.b-bh,28,bh);ctx.fillStyle="#687f90";ctx.textAlign="center";ctx.fillText(x.label,px,H-18)});[["max","#e08122"],["min","#0878b8"]].forEach(([key,color])=>{ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();data.forEach((x,i)=>{const px=p.l+i*(W-p.l-p.r)/(data.length-1),py=H-p.b-(Number(x[key])+5)/45*(H-p.t-p.b);if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);ctx.fillStyle=color;ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fill();ctx.fillStyle=color;ctx.fillText(`${Math.round(x[key])}°`,px,py-9)});ctx.stroke()})}
 
 function renderHistory(){const a=measurements();$("historyBody").innerHTML=a.length?a.map(m=>`<tr><td>${new Date(m.date).toLocaleString("sl-SI")}</td><td>${m.ph}</td><td>${m.cl}</td><td>${m.temp||"–"}</td><td><button class="danger" data-m-del="${m.id}" style="padding:5px;margin:0">×</button></td></tr>`).join(""):'<tr><td colspan="5">Ni meritev.</td></tr>';document.querySelectorAll("[data-m-del]").forEach(b=>b.onclick=()=>{set(KEYS.measurements,measurements().filter(x=>x.id!==Number(b.dataset.mDel)));renderHistory();refresh()})}
-function exportJSON(){download(JSON.stringify({version:"4.7",profile:profile(),measurements:measurements(),logs:get(KEYS.logs,[]),stock:get(KEYS.stock,[]),tasks:tasks(),multitab:multitabData()},null,2),"MojBazen-v4-7-backup.json","application/json")}
+function exportJSON(){download(JSON.stringify({version:"4.10",profile:profile(),measurements:measurements(),logs:get(KEYS.logs,[]),stock:get(KEYS.stock,[]),tasks:tasks(),multitab:multitabData()},null,2),"MojBazen-v4-10-backup.json","application/json")}
 function exportCSV(){const rows=[["Datum","pH","Klor","Temperatura"],...measurements().map(m=>[m.date,m.ph,m.cl,m.temp])];download(rows.map(r=>r.join(";")).join("\n"),"MojBazen-meritve.csv","text/csv")}
-function importJSON(file){const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(o.profile)set(KEYS.profile,o.profile);if(o.measurements)set(KEYS.measurements,o.measurements);if(o.logs)set(KEYS.logs,o.logs);if(o.stock)set(KEYS.stock,o.stock);if(o.tasks)set(KEYS.tasks,o.tasks);if(o.multitab)set(KEYS.multitab,o.multitab);loadProfile();refresh();renderTasks();renderLogs();renderStock();alert("Podatki so uvoženi.")}catch{alert("Datoteka ni veljavna.")}};r.readAsText(file)}
+function importJSON(file){const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(o.profile)set(KEYS.profile,o.profile);if(o.measurements)set(KEYS.measurements,o.measurements);if(o.logs)set(KEYS.logs,o.logs);if(o.stock)set(KEYS.stock,o.stock);if(o.tasks)set(KEYS.tasks,o.tasks);if(o.multitab)set(KEYS.multitab,o.multitab);loadProfile();refresh();renderTreatmentOptions();renderTasks();renderLogs();renderStock();alert("Podatki so uvoženi.")}catch{alert("Datoteka ni veljavna.")}};r.readAsText(file)}
 function toggleDark(){document.body.classList.toggle("dark");set(KEYS.dark,document.body.classList.contains("dark"))}
 
 $("product").innerHTML=products.map(p=>`<option>${p.name}</option>`).join("");
+$("product").onchange=renderTreatmentOptions;
 $("stockCatalog").innerHTML=stockCatalog.map(x=>`<option>${x}</option>`).join("");
 $("stockCatalog").onchange=()=>{$("stockName").value=$("stockCatalog").value==="Drugo"?"":$("stockCatalog").value};
 $("saveMeasurementBtn").onclick=saveMeasurement;$("saveProfileBtn").onclick=saveProfile;$("calcChemicalBtn").onclick=calcChemical;$("addLogBtn").onclick=addLog;$("addStockBtn").onclick=addStock;$("clearStockBtn").onclick=()=>{if(confirm("Res izbrišem vso zalogo?")){set(KEYS.stock,[]);renderStock()}};$("requestNotificationsBtn").onclick=requestNotifications;$("chartMetric").onchange=drawMeasurementChart;$("loadWeatherBtn").onclick=loadWeather;$("exportJsonBtn").onclick=exportJSON;$("exportCsvBtn").onclick=exportCSV;$("printBtn").onclick=()=>window.print();$("importJsonBtn").onclick=()=>$("importFile").click();$("importFile").onchange=e=>{if(e.target.files[0])importJSON(e.target.files[0])};$("darkModeBtn").onclick=toggleDark;$("setMultitabBtn").onclick=setMultitab;$("multitabCard").onclick=e=>{if(e.target.tagName!=="BUTTON")setMultitab()};$("calendarMultitabBtn").onclick=calendarMultitab;
 if(get(KEYS.dark,false))document.body.classList.add("dark");
-loadProfile();refresh();renderTasks();renderLogs();renderStock();renderHistory();renderWeather();
+loadProfile();refresh();renderTreatmentOptions();renderTasks();renderLogs();renderStock();renderHistory();renderWeather();
 const initial=location.hash.replace("#","");if(document.getElementById(initial))selectTab(initial);
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").then(r=>r.update()).catch(()=>{});
+
+
+// Zagonski zaslon v4.10
+(function(){
+  const splash=document.getElementById("splashScreen");
+  if(!splash)return;
+  const hide=()=>{setTimeout(()=>splash.classList.add("is-hidden"),650);setTimeout(()=>splash.remove(),1200)};
+  if(document.readyState==="complete")hide();else window.addEventListener("load",hide,{once:true});
+  setTimeout(hide,2600);
+})();

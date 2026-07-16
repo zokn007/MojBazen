@@ -1,11 +1,16 @@
 <!doctype html><html lang="sl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0878b8"><title>MojBazen</title>
-<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="stylesheet" href="styles.css">
+<link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="stylesheet" href="styles.css">
 </head><body>
-<header class="hero compact-hero">
-<span class="bubble b1"></span><span class="bubble b2"></span><span class="bubble b3"></span><span class="bubble b4"></span>
-</header>
+<div id="splashScreen" class="splash-screen" role="status" aria-label="MojBazen se zaganja">
+  <div class="splash-content">
+    <img src="mojbazen-icon.png" alt="MojBazen">
+    <div class="splash-title">MojBazen</div>
+    <div class="splash-loader"><span></span></div>
+    <div class="splash-text">nalaganje …</div>
+  </div>
+</div>
 <main>
 <nav class="menu-grid">
 <button data-tab="home" class="active"><span class="menu-icon">🏠</span>Pregled</button>
@@ -53,7 +58,7 @@
     </div>
     <div class="multitab-buttons">
       <button id="setMultitabBtn">Potek</button>
-      <button class="secondary" id="calendarMultitabBtn">Dodaj v koledar</button>
+      <button class="secondary" id="calendarMultitabBtn">Koledar</button>
     </div>
   </div>
 </div>
@@ -76,10 +81,16 @@
 <div><label>Temperatura °C</label><input id="mTemp" type="number" step="0.1"></div>
 </div><label>Opomba</label><textarea id="mNote" rows="3"></textarea><button id="saveMeasurementBtn">Shrani meritev</button><div id="mMsg"></div></div></section>
 
-<section id="assistant"><div class="card"><h2>Pametni pomočnik</h2><label>Izdelek</label><select id="product"></select>
-<div class="grid"><div><label>Trenutna vrednost</label><input id="currentValue" type="number" step="0.1"></div><div><label>Ciljna vrednost</label><input id="targetValue" type="number" step="0.1"></div></div>
-<button id="calcChemicalBtn">Izračunaj odmerek</button><div id="chemResult"></div></div>
-<div class="card"><h2>Varnost</h2><div class="small">Najprej uravnaj pH, nato klor. Izdelkov ne mešaj neposredno med seboj. Vedno imajo prednost navodila na embalaži.</div></div></section>
+<section id="assistant">
+<div class="card"><h2>Preračunavanje kemikalij</h2>
+<div class="status ok">Prostornina bazena: <b id="helperVolume">–</b></div>
+<label>Izdelek</label><select id="product"></select>
+<label>Vrsta tretmaja</label><select id="treatment"></select>
+<div id="valueInputs" class="grid"><div><label id="currentLabel">Trenutna vrednost</label><input id="currentValue" type="number" inputmode="decimal" step="0.1"></div><div><label id="targetLabel">Ciljna vrednost</label><input id="targetValue" type="number" inputmode="decimal" step="0.1"></div></div>
+<div id="manualDoseInputs" class="grid" hidden><div><label>Odmerek z embalaže</label><input id="manualDose" type="number" inputmode="decimal" step="0.1"></div><div><label>Na koliko m³</label><input id="manualPerM3" type="number" inputmode="decimal" step="0.1" value="10"></div></div>
+<button id="calcChemicalBtn">Izračunaj odmerek</button><div id="chemResult"></div>
+<div id="doseInfo" class="small dose-info"></div></div>
+<div class="card"><h2>Varnost</h2><div class="small"><b>Vedno ima prednost aktualna deklaracija na embalaži.</b> Najprej uravnaj pH, nato klor. Kemikalij nikoli ne mešaj med seboj, vsako pripravi ločeno. Granulate raztapljaj skladno z deklaracijo, uporabljaj zaščitne rokavice in med doziranjem naj deluje filtracija. Kopanje dovoli šele, ko so izmerjene vrednosti spet v dovoljenem območju.</div></div></section>
 
 <section id="logs"><div class="card"><h2>Dnevnik vzdrževanja</h2><div class="grid"><div><label>Opravilo ali sredstvo</label><select id="logType">
 <option>Planet Pool Multitab 200 g</option><option>Planet Pool Flockstar</option><option>Planet Pool pH Minus</option><option>Planet Pool pH Plus</option><option>Planet Pool klor granulat</option><option>Planet Pool algecid</option>
@@ -96,10 +107,10 @@
 <section id="data"><div class="card"><h2>Podatki</h2><div class="actions"><button id="exportJsonBtn">Izvozi varnostno kopijo</button><button class="secondary" id="importJsonBtn">Uvozi varnostno kopijo</button><button id="exportCsvBtn">Izvozi CSV</button><button class="secondary" id="printBtn">Natisni / PDF</button></div><input id="importFile" type="file" accept=".json" hidden></div><div class="card"><h2>Zgodovina meritev</h2><div style="overflow:auto"><table><thead><tr><th>Datum</th><th>pH</th><th>Klor</th><th>°C</th><th></th></tr></thead><tbody id="historyBody"></tbody></table></div></div></section>
 <section id="settings">
 <div class="card profile-info-card">
-  <img src="logo-mojbazen.svg" alt="MojBazen">
+  <img src="mojbazen-icon.png" alt="MojBazen">
   <h2>MojBazen by Davor Gričnik</h2>
   <p>Preprosta aplikacija za pregled meritev, vzdrževanje bazena, zalogo kemikalij, vremensko napoved in odštevanje sredstva Multitab.</p>
-  <div class="app-version">Verzija programa: <b>v4.7</b></div>
+  <div class="app-version">Verzija programa: <b>v4.10</b></div>
 </div>
 <div class="card"><h2>Mere bazena</h2><label>Ime bazena</label><input id="sName"><div class="grid3"><div><label>Dolžina m</label><input id="sL" type="number" step="0.1"></div><div><label>Širina m</label><input id="sW" type="number" step="0.1"></div><div><label>Višina vode m</label><input id="sH" type="number" step="0.1"></div></div><div id="volumePreview" class="status ok">Izračunana prostornina: –</div><button id="saveProfileBtn">Shrani profil</button><div id="sMsg"></div></div><div class="card"><button class="secondary" id="darkModeBtn">Preklopi temni način</button></div></section>
 </main><script src="app.js"></script></body></html>

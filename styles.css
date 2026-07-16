@@ -300,3 +300,80 @@
   .multitab-buttons{grid-template-columns:45px 1fr !important;gap:3px !important}
   .multitab-buttons button{font-size:7px !important;padding:4px 2px !important}
 }
+
+
+/* MojBazen v4.8 – manjše nadgradnje iz verzije 4.7 */
+.menu-grid{gap:9px}
+.menu-grid button{min-height:68px;padding:9px 5px;font-size:12px;border-radius:14px}
+.menu-icon{font-size:23px;margin-bottom:4px}
+
+/* Štirje popolnoma simetrični prikazovalniki */
+.overview-row{
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:9px !important;
+  overflow:visible !important;
+}
+.overview-card{
+  min-height:124px !important;
+  padding:10px 8px !important;
+  border-radius:17px !important;
+}
+.multitab-overview{padding:8px !important}
+.multitab-top{justify-content:center !important;gap:5px !important}
+.percent-ring{width:50px !important;height:50px !important;flex:0 0 50px !important}
+.percent-ring:before{width:38px !important;height:38px !important}
+.percent-ring-inner b{font-size:13px !important}
+.multitab-details>b{font-size:13px !important}
+.multitab-details small{font-size:8px !important;max-width:78px}
+.multitab-buttons{
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:4px !important;
+  width:100% !important;
+}
+.multitab-buttons button{
+  min-width:0 !important;
+  min-height:27px !important;
+  padding:5px 2px !important;
+  font-size:8px !important;
+}
+.weather-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin-top:12px}
+.weather-day{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:9px 4px;text-align:center;box-shadow:0 5px 14px rgba(16,62,91,.06)}
+.weather-day .day{font-size:11px;font-weight:700;text-transform:capitalize}
+.weather-day .weather-icon{font-size:27px;line-height:1.25;margin:4px 0}
+.weather-day .temps{font-size:12px;font-weight:700;white-space:nowrap}
+.weather-day .rain{font-size:10px;color:var(--muted);margin-top:3px}
+.weather-legend{margin-top:10px}
+@media(max-width:520px){
+  .menu-grid{gap:6px}
+  .menu-grid button{min-height:64px;padding:7px 2px;font-size:10px}
+  .menu-icon{font-size:21px}
+  .overview-row{grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:5px !important}
+  .overview-card{min-height:112px !important;padding:7px 3px !important}
+  .overview-label{font-size:9px !important}
+  .overview-card>b{font-size:16px !important}
+  .percent-ring{width:42px !important;height:42px !important;flex-basis:42px !important}
+  .percent-ring:before{width:32px !important;height:32px !important}
+  .multitab-top{gap:3px !important}
+  .multitab-details>b{font-size:11px !important}
+  .multitab-details small{font-size:7px !important;max-width:56px}
+  .multitab-buttons button{font-size:7px !important;padding:4px 1px !important}
+  .weather-days{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+}
+
+.dose-info{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(8,120,184,.06)}
+#assistant select,#assistant input{font-size:16px}
+#assistant .status b{font-size:1.08em}
+
+/* MojBazen v4.10 – zagonski zaslon in odstranitev zgornje vrstice */
+main{margin:0 auto;padding-top:14px}
+.splash-screen{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#06131f;transition:opacity .45s ease,visibility .45s ease}
+.splash-screen.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+.splash-content{text-align:center;color:#fff;width:min(82vw,380px)}
+.splash-content img{display:block;width:min(62vw,270px);height:auto;aspect-ratio:1;border-radius:24%;margin:0 auto 24px;box-shadow:0 18px 55px rgba(0,0,0,.5)}
+.splash-title{font-size:30px;font-weight:800;letter-spacing:.2px;margin-bottom:24px}
+.splash-loader{height:6px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;width:72%;margin:0 auto 12px}
+.splash-loader span{display:block;height:100%;width:42%;border-radius:inherit;background:#148cff;animation:splashLoad 1.25s ease-in-out infinite}
+.splash-text{font-size:13px;color:rgba(255,255,255,.75)}
+@keyframes splashLoad{0%{transform:translateX(-110%)}50%{transform:translateX(115%)}100%{transform:translateX(250%)}}
+@media(prefers-reduced-motion:reduce){.splash-loader span{animation:none;width:100%}.splash-screen{transition:none}}
+.profile-info-card img{width:min(220px,62%);border-radius:24%;box-shadow:0 10px 28px rgba(0,0,0,.16)}
