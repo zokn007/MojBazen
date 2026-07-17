@@ -1,7 +1,15 @@
-<!doctype html><html lang="sl"><head>
+<!doctype html><html data-app-version="4.11" lang="sl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0878b8"><title>MojBazen</title>
 <link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="stylesheet" href="styles.css">
+
+<!-- DG Cloud Sync: Firebase Authentication + Cloud Firestore -->
+<script>window.DG_CLOUD_CONFIG={"appId": "mojbazen", "appName": "MojBazen", "keys": ["poolProfile44", "poolMeasurements44", "poolLogs44", "poolStock44", "poolTasks44", "poolDark44", "poolMultitab44"], "prefixes": []};</script>
+<script src="/__/firebase/12.16.0/firebase-app-compat.js"></script>
+<script src="/__/firebase/12.16.0/firebase-auth-compat.js"></script>
+<script src="/__/firebase/12.16.0/firebase-firestore-compat.js"></script>
+<script src="/__/firebase/init.js"></script>
+<script src="cloud-sync.js"></script>
 </head><body>
 <div id="splashScreen" class="splash-screen" role="status" aria-label="MojBazen se zaganja">
   <div class="splash-content">
@@ -110,7 +118,8 @@
   <img src="mojbazen-icon.png" alt="MojBazen">
   <h2>MojBazen by Davor Gričnik</h2>
   <p>Preprosta aplikacija za pregled meritev, vzdrževanje bazena, zalogo kemikalij, vremensko napoved in odštevanje sredstva Multitab.</p>
-  <div class="app-version">Verzija programa: <b>v4.10</b></div>
+  <div class="app-version">Verzija programa: <b>v4.11</b></div>
 </div>
 <div class="card"><h2>Mere bazena</h2><label>Ime bazena</label><input id="sName"><div class="grid3"><div><label>Dolžina m</label><input id="sL" type="number" step="0.1"></div><div><label>Širina m</label><input id="sW" type="number" step="0.1"></div><div><label>Višina vode m</label><input id="sH" type="number" step="0.1"></div></div><div id="volumePreview" class="status ok">Izračunana prostornina: –</div><button id="saveProfileBtn">Shrani profil</button><div id="sMsg"></div></div><div class="card"><button class="secondary" id="darkModeBtn">Preklopi temni način</button></div></section>
-</main><script src="app.js"></script></body></html>
+</main><script src="app.js"></script><script src="update-manager.js"></script>
+</body></html>
