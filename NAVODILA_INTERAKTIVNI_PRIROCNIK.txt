@@ -1,0 +1,13 @@
+MOJBAZEN 5.6 – INTERAKTIVNI PRIROČNIK
+
+V aplikaciji odpri Pomočnik > Servisni priročnik.
+
+Vključeno:
+- 8 servisnih področij,
+- 160 ilustriranih korakov,
+- iskanje po vsebini,
+- označevanje opravljenih korakov,
+- shranjevanje napredka v napravi,
+- delovanje brez internetne povezave po prvem nalaganju.
+
+Varnost: pred odpiranjem opreme vedno izklopi elektriko, zapri ventile in sprosti tlak.

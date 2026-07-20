@@ -3,7 +3,7 @@
 const $=id=>document.getElementById(id);
 const get=(k,d=null)=>{try{return JSON.parse(localStorage.getItem(k)??JSON.stringify(d))}catch{return d}};
 const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-const KEYS={profile:"poolProfile44",measurements:"poolMeasurements44",logs:"poolLogs44",stock:"poolStock44",tasks:"poolTasks44",dark:"poolDark44",multitab:"poolMultitab44"};
+const KEYS={profile:"poolProfile44",measurements:"poolMeasurements44",logs:"poolLogs44",stock:"poolStock44",tasks:"poolTasks44",dark:"poolDark44",multitab:"poolMultitab44",diagnostics:"poolDiagnostics53"};
 
 const products=[
 {name:"Planet Pool pH Minus granulat",kind:"ph",direction:"down",unit:"g",base:150,perM3:10,delta:.2,source:"Planet Pool deklaracija: 150 g na 10 m³ zniža pH približno za 0,2.",instructions:"Najprej raztopi v vedru vode in počasi vlij ob robu. Pri trdi vodi je lahko potreben večji odmerek."},
@@ -50,7 +50,28 @@ function saveProfile(){set(KEYS.profile,{name:$("sName").value||"Domači bazen",
 
 function saveMeasurement(){const ph=Number($("mPh").value),cl=Number($("mCl").value);if(!ph||$("mCl").value===""){$("mMsg").innerHTML='<div class="status bad">Vnesi pH in prosti klor.</div>';return}const a=measurements();a.unshift({id:Date.now(),date:new Date().toISOString(),ph,cl,temp:$("mTemp").value,note:$("mNote").value});set(KEYS.measurements,a);$("mMsg").innerHTML='<div class="status ok">Meritev je shranjena.</div>';refresh()}
 function analysis(m){if(!m)return["warn","Ni meritev.",[]];const text=[],plan=[];if(m.ph<7){text.push("pH je prenizek.");plan.push("Najprej dodaj pH plus.")}else if(m.ph>7.4){text.push("pH je previsok.");plan.push("Najprej dodaj pH minus.")}else text.push("pH je v ciljnem območju.");if(m.cl<.5){text.push("Klor je prenizek.");plan.push("Po uravnanju pH dodaj klor.")}else if(m.cl>1.5){text.push("Klor je visok.");plan.push("Ne dodajaj klora.")}else text.push("Klor je v običajnem območju.");return[(m.ph>=7&&m.ph<=7.4&&m.cl>=.5&&m.cl<=1.5)?"ok":"warn",text.join(" "),plan]}
-function refresh(){const p=profile(),m=measurements()[0],a=analysis(m);$("dVol").textContent=volume()?volume().toFixed(1)+" m³":"–";$("helperVolume").textContent=volume()?volume().toFixed(1)+" m³":"–";$("dPh").textContent=m?.ph??"–";$("dCl").textContent=m?m.cl+" mg/l":"–";$("advice").className="status "+a[0];$("advice").textContent=a[1];$("todayPlan").innerHTML=a[2].length?"<ul>"+a[2].map(x=>"<li>"+x+"</li>").join("")+"</ul>":"";renderHomeTasks();renderMultitab();checkMultitabNotifications()}
+function poolScore(m){
+  if(!m)return {score:null,title:"Pripravljen na pregled",text:"Dodaj zadnjo meritev in aplikacija bo ocenila stanje vode.",tone:"neutral"};
+  let score=100;
+  const ph=Number(m.ph),cl=Number(m.cl);
+  if(ph<7||ph>7.6)score-=30;else if(ph<7.2||ph>7.4)score-=10;
+  if(cl<0.5||cl>3)score-=35;else if(cl<1||cl>2)score-=12;
+  score=Math.max(0,Math.min(100,score));
+  if(score>=90)return {score,title:"Bazen je odličen",text:"Vrednosti so v priporočenem območju. Nadaljuj z rednim vzdrževanjem.",tone:"good"};
+  if(score>=65)return {score,title:"Potrebna je pozornost",text:"Ena od vrednosti je blizu meje. Preveri današnjo analizo spodaj.",tone:"warning"};
+  return {score,title:"Potrebno je ukrepanje",text:"Izmerjene vrednosti odstopajo. Upoštevaj priporočene korake.",tone:"danger"};
+}
+function renderPoolStatus(m){
+  const status=poolScore(m),card=$("poolStatusCard");
+  if(!card)return;
+  card.dataset.tone=status.tone;
+  $("poolStatusTitle").textContent=status.title;
+  $("poolStatusText").textContent=status.text;
+  $("poolScoreValue").textContent=status.score===null?"–":status.score;
+  $("poolScore").style.setProperty("--score",status.score??0);
+  $("lastMeasurementText").textContent=m?`Zadnja meritev: ${new Date(m.date).toLocaleString("sl-SI")}`:"Ni shranjenih meritev";
+}
+function refresh(){const p=profile(),m=measurements()[0],a=analysis(m);$("dVol").textContent=volume()?volume().toFixed(1)+" m³":"–";$("helperVolume").textContent=volume()?volume().toFixed(1)+" m³":"–";if($("helperVolumeCalc"))$("helperVolumeCalc").textContent=volume()?volume().toFixed(1)+" m³":"–";$("dPh").textContent=m?.ph??"–";$("dCl").textContent=m?m.cl+" mg/l":"–";$("advice").className="status "+a[0];$("advice").textContent=a[1];$("todayPlan").innerHTML=a[2].length?"<ul>"+a[2].map(x=>"<li>"+x+"</li>").join("")+"</ul>":"";renderPoolStatus(m);renderHomeTasks();renderMultitab();checkMultitabNotifications()}
 
 function selectedProduct(){return products[$("product").selectedIndex]}
 function renderTreatmentOptions(){
@@ -137,9 +158,9 @@ async function loadWeather(){const summary=$("weatherSummary");summary.innerHTML
 function renderWeather(data=get("poolWeather44",[])){if(!data.length)return;$("weatherSummary").innerHTML=`<div class="weather-days">${data.map(x=>{const w=weatherInfo(Number(x.code));return`<div class="weather-day" title="${w[1]}"><div class="day">${x.label}</div><div class="weather-icon">${w[0]}</div><div class="temps">${Math.round(x.max)}° / ${Math.round(x.min)}°</div><div class="rain">💧 ${Number(x.rain).toFixed(1)} mm</div></div>`}).join("")}</div><div class="status ok weather-legend">Oranžna črta: najvišja temperatura · modra črta: najnižja · stolpci: padavine.</div>`;const c=$("weatherChart"),ctx=c.getContext("2d"),W=c.width,H=c.height,p={l:48,r:28,t:26,b:48};ctx.clearRect(0,0,W,H);ctx.font="13px -apple-system, sans-serif";data.forEach((x,i)=>{const px=p.l+i*(W-p.l-p.r)/(data.length-1),bh=Math.min(95,Number(x.rain)*6);ctx.fillStyle="rgba(24,166,202,.3)";ctx.fillRect(px-14,H-p.b-bh,28,bh);ctx.fillStyle="#687f90";ctx.textAlign="center";ctx.fillText(x.label,px,H-18)});[["max","#e08122"],["min","#0878b8"]].forEach(([key,color])=>{ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();data.forEach((x,i)=>{const px=p.l+i*(W-p.l-p.r)/(data.length-1),py=H-p.b-(Number(x[key])+5)/45*(H-p.t-p.b);if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);ctx.fillStyle=color;ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fill();ctx.fillStyle=color;ctx.fillText(`${Math.round(x[key])}°`,px,py-9)});ctx.stroke()})}
 
 function renderHistory(){const a=measurements();$("historyBody").innerHTML=a.length?a.map(m=>`<tr><td>${new Date(m.date).toLocaleString("sl-SI")}</td><td>${m.ph}</td><td>${m.cl}</td><td>${m.temp||"–"}</td><td><button class="danger" data-m-del="${m.id}" style="padding:5px;margin:0">×</button></td></tr>`).join(""):'<tr><td colspan="5">Ni meritev.</td></tr>';document.querySelectorAll("[data-m-del]").forEach(b=>b.onclick=()=>{set(KEYS.measurements,measurements().filter(x=>x.id!==Number(b.dataset.mDel)));renderHistory();refresh()})}
-function exportJSON(){download(JSON.stringify({version:"4.11",profile:profile(),measurements:measurements(),logs:get(KEYS.logs,[]),stock:get(KEYS.stock,[]),tasks:tasks(),multitab:multitabData()},null,2),"MojBazen-v4-11-backup.json","application/json")}
+function exportJSON(){download(JSON.stringify({version:"5.7",profile:profile(),measurements:measurements(),logs:get(KEYS.logs,[]),stock:get(KEYS.stock,[]),tasks:tasks(),multitab:multitabData(),diagnostics:get(KEYS.diagnostics,[])},null,2),"MojBazen-v5-7-backup.json","application/json")}
 function exportCSV(){const rows=[["Datum","pH","Klor","Temperatura"],...measurements().map(m=>[m.date,m.ph,m.cl,m.temp])];download(rows.map(r=>r.join(";")).join("\n"),"MojBazen-meritve.csv","text/csv")}
-function importJSON(file){const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(o.profile)set(KEYS.profile,o.profile);if(o.measurements)set(KEYS.measurements,o.measurements);if(o.logs)set(KEYS.logs,o.logs);if(o.stock)set(KEYS.stock,o.stock);if(o.tasks)set(KEYS.tasks,o.tasks);if(o.multitab)set(KEYS.multitab,o.multitab);loadProfile();refresh();renderTreatmentOptions();renderTasks();renderLogs();renderStock();alert("Podatki so uvoženi.")}catch{alert("Datoteka ni veljavna.")}};r.readAsText(file)}
+function importJSON(file){const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(o.profile)set(KEYS.profile,o.profile);if(o.measurements)set(KEYS.measurements,o.measurements);if(o.logs)set(KEYS.logs,o.logs);if(o.stock)set(KEYS.stock,o.stock);if(o.tasks)set(KEYS.tasks,o.tasks);if(o.multitab)set(KEYS.multitab,o.multitab);if(o.diagnostics)set(KEYS.diagnostics,o.diagnostics);loadProfile();refresh();renderTreatmentOptions();renderTasks();renderLogs();renderStock();alert("Podatki so uvoženi.")}catch{alert("Datoteka ni veljavna.")}};r.readAsText(file)}
 function toggleDark(){document.body.classList.toggle("dark");set(KEYS.dark,document.body.classList.contains("dark"))}
 
 $("product").innerHTML=products.map(p=>`<option>${p.name}</option>`).join("");
@@ -147,6 +168,9 @@ $("product").onchange=renderTreatmentOptions;
 $("stockCatalog").innerHTML=stockCatalog.map(x=>`<option>${x}</option>`).join("");
 $("stockCatalog").onchange=()=>{$("stockName").value=$("stockCatalog").value==="Drugo"?"":$("stockCatalog").value};
 $("saveMeasurementBtn").onclick=saveMeasurement;$("saveProfileBtn").onclick=saveProfile;$("calcChemicalBtn").onclick=calcChemical;$("addLogBtn").onclick=addLog;$("addStockBtn").onclick=addStock;$("clearStockBtn").onclick=()=>{if(confirm("Res izbrišem vso zalogo?")){set(KEYS.stock,[]);renderStock()}};$("requestNotificationsBtn").onclick=requestNotifications;$("chartMetric").onchange=drawMeasurementChart;$("loadWeatherBtn").onclick=loadWeather;$("exportJsonBtn").onclick=exportJSON;$("exportCsvBtn").onclick=exportCSV;$("printBtn").onclick=()=>window.print();$("importJsonBtn").onclick=()=>$("importFile").click();$("importFile").onchange=e=>{if(e.target.files[0])importJSON(e.target.files[0])};$("darkModeBtn").onclick=toggleDark;$("setMultitabBtn").onclick=setMultitab;$("multitabCard").onclick=e=>{if(e.target.tagName!=="BUTTON")setMultitab()};$("calendarMultitabBtn").onclick=calendarMultitab;
+document.addEventListener("pointerdown",e=>{const b=e.target.closest("button");if(b)b.classList.add("is-pressed")});
+document.addEventListener("pointerup",()=>document.querySelectorAll("button.is-pressed").forEach(b=>setTimeout(()=>b.classList.remove("is-pressed"),90)));
+document.addEventListener("pointercancel",()=>document.querySelectorAll("button.is-pressed").forEach(b=>b.classList.remove("is-pressed")));
 if(get(KEYS.dark,false))document.body.classList.add("dark");
 loadProfile();refresh();renderTreatmentOptions();renderTasks();renderLogs();renderStock();renderHistory();renderWeather();
 const initial=location.hash.replace("#","");if(document.getElementById(initial))selectTab(initial);

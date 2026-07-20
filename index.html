@@ -1,10 +1,10 @@
-<!doctype html><html data-app-version="4.13" lang="sl"><head>
+<!doctype html><html data-app-version="5.7" lang="sl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0878b8"><title>MojBazen</title>
 <link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="stylesheet" href="styles.css">
 
 <!-- DG Cloud Sync: Firebase Authentication + Cloud Firestore -->
-<script>window.DG_CLOUD_CONFIG={"appId": "mojbazen", "appName": "MojBazen", "keys": ["poolProfile44", "poolMeasurements44", "poolLogs44", "poolStock44", "poolTasks44", "poolDark44", "poolMultitab44"], "prefixes": []};</script>
+<script>window.DG_CLOUD_CONFIG={"appId": "mojbazen", "appName": "MojBazen", "keys": ["poolProfile44", "poolMeasurements44", "poolLogs44", "poolStock44", "poolTasks44", "poolDark44", "poolMultitab44", "poolDiagnostics53", "poolGuideProgress55"], "prefixes": []};</script>
 <script src="/__/firebase/12.16.0/firebase-app-compat.js"></script>
 <script src="/__/firebase/12.16.0/firebase-auth-compat.js"></script>
 <script src="/__/firebase/12.16.0/firebase-firestore-compat.js"></script>
@@ -34,6 +34,17 @@
 </nav>
 
 <section id="home" class="active">
+<div class="pool-status-card" id="poolStatusCard">
+  <div class="pool-status-copy">
+    <span class="eyebrow">STANJE BAZENA</span>
+    <h1 id="poolStatusTitle">Pripravljen na pregled</h1>
+    <p id="poolStatusText">Dodaj zadnjo meritev in aplikacija bo ocenila stanje vode.</p>
+    <small id="lastMeasurementText">Ni shranjenih meritev</small>
+  </div>
+  <div class="pool-score" id="poolScore" aria-label="Ocena stanja bazena">
+    <b id="poolScoreValue">–</b><span>%</span>
+  </div>
+</div>
 <div class="overview-row">
   <div class="overview-card">
     <span class="overview-label">Prostornina</span>
@@ -90,15 +101,74 @@
 </div><label>Opomba</label><textarea id="mNote" rows="3"></textarea><button id="saveMeasurementBtn">Shrani meritev</button><div id="mMsg"></div></div></section>
 
 <section id="assistant">
-<div class="card"><h2>Preračunavanje kemikalij</h2>
-<div class="status ok">Prostornina bazena: <b id="helperVolume">–</b></div>
-<label>Izdelek</label><select id="product"></select>
-<label>Vrsta tretmaja</label><select id="treatment"></select>
-<div id="valueInputs" class="grid"><div><label id="currentLabel">Trenutna vrednost</label><input id="currentValue" type="number" inputmode="decimal" step="0.1"></div><div><label id="targetLabel">Ciljna vrednost</label><input id="targetValue" type="number" inputmode="decimal" step="0.1"></div></div>
-<div id="manualDoseInputs" class="grid" hidden><div><label>Odmerek z embalaže</label><input id="manualDose" type="number" inputmode="decimal" step="0.1"></div><div><label>Na koliko m³</label><input id="manualPerM3" type="number" inputmode="decimal" step="0.1" value="10"></div></div>
-<button id="calcChemicalBtn">Izračunaj odmerek</button><div id="chemResult"></div>
-<div id="doseInfo" class="small dose-info"></div></div>
-<div class="card"><h2>Varnost</h2><div class="small"><b>Vedno ima prednost aktualna deklaracija na embalaži.</b> Najprej uravnaj pH, nato klor. Kemikalij nikoli ne mešaj med seboj, vsako pripravi ločeno. Granulate raztapljaj skladno z deklaracijo, uporabljaj zaščitne rokavice in med doziranjem naj deluje filtracija. Kopanje dovoli šele, ko so izmerjene vrednosti spet v dovoljenem območju.</div></div></section>
+<div class="assistant-hero card">
+  <span class="assistant-badge">MODUL A + B + C · RAZLIČICA 5.7</span>
+  <h2>DG Smart Pool Assistant</h2>
+  <p>Diagnostika, pametna priporočila, servisni priročnik, interaktivni vodiči in 3D prikazi bazenske opreme.</p>
+  <div class="status ok">Prostornina bazena: <b id="helperVolume">–</b></div>
+</div>
+<div id="assistantHome" class="assistant-view active">
+  <div class="assistant-grid">
+    <button class="assistant-tile" data-assistant-view="waterDiag"><span>💧</span><b>Diagnostika vode</b><small>Motna, mlečna, zelena, madeži …</small></button>
+    <button class="assistant-tile" data-assistant-view="filterDiag"><span>🧽</span><b>Diagnostika filtra</b><small>Pritisk, pretok, pesek, ventil …</small></button>
+    <button class="assistant-tile" data-assistant-view="pumpDiag"><span>⚙️</span><b>Diagnostika črpalke</b><small>Brni, pušča, ne vleče, se greje …</small></button>
+    <button class="assistant-tile" data-assistant-view="chemicalCalc"><span>🧪</span><b>Kalkulator kemikalij</b><small>Preračun na prostornino bazena</small></button>
+    <button class="assistant-tile module-b" data-assistant-view="photoDiag"><span>📷</span><b>Foto diagnostika</b><small>Fotografiraj vodo, stene ali opremo</small></button>
+    <button class="assistant-tile module-b" data-assistant-view="aiAdvice"><span>✨</span><b>AI priporočila</b><small>Osebni načrt glede na tvoje podatke</small></button>
+    <button class="assistant-tile wide module-b" data-assistant-view="historyAnalysis"><span>📊</span><b>Analiza zgodovine</b><small>Trendi, ponavljajoče težave in uspešnost ukrepov</small></button>
+    <button class="assistant-tile module-c" data-assistant-view="serviceManual"><span>🛠️</span><b>Servisni priročnik</b><small>Filter, črpalka, ventil in sezonski servis</small></button>
+    <button class="assistant-tile module-c" data-assistant-view="interactiveGuides"><span>🧭</span><b>Interaktivni vodiči</b><small>Korak za korakom z napredkom in časovnikom</small></button>
+    <button class="assistant-tile wide module-c" data-assistant-view="models3d"><span>🧊</span><b>3D modeli opreme</b><small>Zavrti, razstavi in spoznaj notranjost filtra ter črpalke</small></button>
+    <button class="assistant-tile" data-assistant-view="planetKnowledge"><span>📘</span><b>Baza PlanetPool</b><small>Uporaba, odmerjanje in opozorila</small></button>
+    <button class="assistant-tile" data-assistant-view="arekinaKnowledge"><span>📗</span><b>Baza Arekina</b><small>Praktična navodila po deklaraciji</small></button>
+    <button class="assistant-tile wide" data-assistant-view="diagHistory"><span>🕘</span><b>Zgodovina diagnostike</b><small>Shranjeni rezultati in označitev »pomagalo / ni pomagalo«</small></button>
+  </div>
+</div>
+
+<div id="waterDiag" class="assistant-view"><button class="assistant-back">← Nazaj</button><div class="card"><h2>Diagnostika vode</h2>
+<label>Kako izgleda voda?</label><select id="waterSymptom"><option value="cloudy">Malo motna</option><option value="milky">Mlečno bela</option><option value="green">Zelena</option><option value="darkgreen">Temno zelena</option><option value="brown">Rjava ali rumena</option><option value="slimy">Sluzaste stene</option><option value="foam">Voda se peni</option><option value="smell">Močan vonj po kloru</option><option value="eyes">Draži oči</option><option value="scale">Bela usedlina</option><option value="spots">Rjaste ali črne lise</option></select>
+<div class="grid"><div><label>pH</label><input id="diagPh" type="number" step="0.1" placeholder="npr. 7,2"></div><div><label>Prosti klor mg/l</label><input id="diagCl" type="number" step="0.1" placeholder="npr. 1,0"></div></div>
+<div class="grid"><div><label>Zadnji backwash</label><select id="diagBackwash"><option value="today">Danes</option><option value="3days">Pred 1–3 dnevi</option><option value="week">Pred približno tednom</option><option value="long">Pred več kot tednom</option></select></div><div><label>Starost filtrirnega medija</label><select id="diagMediaAge"><option value="new">Manj kot 2 leti</option><option value="mid">2–5 let</option><option value="old">5–10 let</option><option value="veryold">Več kot 10 let</option></select></div></div>
+<button id="runWaterDiag">Analiziraj vodo</button><div id="waterDiagResult"></div></div></div>
+
+<div id="filterDiag" class="assistant-view"><button class="assistant-back">← Nazaj</button><div class="card"><h2>Diagnostika filtra</h2><label>Kaj se dogaja?</label><select id="filterSymptom"><option value="lowflow">Slab pretok</option><option value="nopressure">Ni pritiska</option><option value="highpressure">Visok pritisk</option><option value="dirtyreturn">Po backwashu se vrača umazana voda</option><option value="sand">Pesek ali steklo v bazenu</option><option value="leak">Ventil ali filter pušča</option><option value="handle">Ročica ventila gre težko</option><option value="noise">Filter je nenavadno glasen</option></select><button id="runFilterDiag">Analiziraj filter</button><div id="filterDiagResult"></div></div></div>
+
+<div id="pumpDiag" class="assistant-view"><button class="assistant-back">← Nazaj</button><div class="card"><h2>Diagnostika črpalke</h2><label>Kaj se dogaja?</label><select id="pumpSymptom"><option value="hums">Brni, vendar se ne zavrti</option><option value="noprime">Ne vleče vode</option><option value="leaks">Pušča</option><option value="hot">Pregreva se</option><option value="loud">Je nenavadno glasna</option><option value="trip">Izklaplja FID ali varovalko</option><option value="bubbles">V bazen vrača mehurčke</option><option value="weak">Pretok je slab</option></select><button id="runPumpDiag">Analiziraj črpalko</button><div id="pumpDiagResult"></div></div></div>
+
+<div id="chemicalCalc" class="assistant-view"><button class="assistant-back">← Nazaj</button>
+<div class="card"><h2>Preračunavanje kemikalij</h2><div class="status ok">Prostornina bazena: <b id="helperVolumeCalc">–</b></div><label>Izdelek</label><select id="product"></select><label>Vrsta tretmaja</label><select id="treatment"></select><div id="valueInputs" class="grid"><div><label id="currentLabel">Trenutna vrednost</label><input id="currentValue" type="number" inputmode="decimal" step="0.1"></div><div><label id="targetLabel">Ciljna vrednost</label><input id="targetValue" type="number" inputmode="decimal" step="0.1"></div></div><div id="manualDoseInputs" class="grid" hidden><div><label>Odmerek z embalaže</label><input id="manualDose" type="number" inputmode="decimal" step="0.1"></div><div><label>Na koliko m³</label><input id="manualPerM3" type="number" inputmode="decimal" step="0.1" value="10"></div></div><button id="calcChemicalBtn">Izračunaj odmerek</button><div id="chemResult"></div><div id="doseInfo" class="small dose-info"></div></div>
+<div class="card"><h2>Varnost</h2><div class="small"><b>Vedno ima prednost deklaracija na embalaži.</b> Najprej uravnaj pH, nato klor. Kemikalij nikoli ne mešaj med seboj. Uporabljaj zaščitne rokavice, med doziranjem naj deluje filtracija, pred kopanjem pa ponovno izmeri vodo.</div></div></div>
+
+<div id="photoDiag" class="assistant-view"><button class="assistant-back">← Nazaj</button>
+<div class="card"><h2>Foto diagnostika</h2><p class="small">Fotografiraj vodo pri dnevni svetlobi, brez barvnih luči in z izklopljenimi filtri fotografije. Slika se analizira lokalno v napravi in se ne pošilja v oblak.</p>
+<label>Kaj fotografiraš?</label><select id="photoSubject"><option value="water">Površino oziroma barvo vode</option><option value="wall">Steno, dno ali madež</option><option value="equipment">Filter, črpalko ali drugo opremo</option></select>
+<label class="photo-upload"><input id="photoInput" type="file" accept="image/*" capture="environment"><span>📷 Posnemi ali izberi fotografijo</span></label>
+<div id="photoPreviewWrap" class="photo-preview-wrap" hidden><img id="photoPreview" alt="Predogled fotografije"><canvas id="photoCanvas" hidden></canvas><div id="photoScanLine"></div></div>
+<button id="runPhotoDiag" disabled>Analiziraj fotografijo</button><div id="photoDiagResult"></div></div></div>
+
+<div id="aiAdvice" class="assistant-view"><button class="assistant-back">← Nazaj</button><div class="card"><h2>AI priporočila</h2><p class="small">Priporočila se ustvarijo iz zadnjih meritev, prostornine bazena, dnevnika vzdrževanja in shranjenih diagnostik.</p><button id="generateAiAdvice">Ustvari današnji načrt</button><div id="aiAdviceResult"></div></div></div>
+
+<div id="historyAnalysis" class="assistant-view"><button class="assistant-back">← Nazaj</button><div class="card"><h2>Analiza zgodovine</h2><div id="historyStats" class="analysis-stats"></div><canvas id="historyAnalysisChart" class="chart" width="900" height="260"></canvas><div id="historyInsights"></div><button class="secondary" id="refreshHistoryAnalysis">Osveži analizo</button></div></div>
+
+<div id="planetKnowledge" class="assistant-view"><button class="assistant-back">← Nazaj</button><div class="card"><h2>Baza znanja PlanetPool</h2><div id="planetKnowledgeList" class="knowledge-list"></div></div></div>
+<div id="arekinaKnowledge" class="assistant-view"><button class="assistant-back">← Nazaj</button><div class="card"><h2>Baza znanja Arekina</h2><div id="arekinaKnowledgeList" class="knowledge-list"></div></div></div>
+
+<div id="serviceManual" class="assistant-view"><button class="assistant-back">← Nazaj</button><div class="card interactive-manual-shell">
+<div id="imHome">
+<div class="im-head"><div><span class="assistant-badge">INTERAKTIVNI PRIROČNIK · 160+ ILUSTRACIJ</span><h2>Servisni center</h2><p class="small">Navodila po korakih za filter, črpalko, ventile, AFM, pesek in sezonsko vzdrževanje.</p></div><div class="im-stat"><b id="imProgressCount">0</b><small>opravljenih korakov</small></div></div>
+<label class="im-search"><span>🔎</span><input id="imSearch" type="search" placeholder="Poišči: rinse, menjava peska, črpalka pušča …"></label>
+<div class="im-category-grid" id="imCategories"></div><div id="imSearchResults"></div>
+<div class="safety-box"><b>⚠️ Varnost</b><p>Pred odpiranjem opreme izklopi elektriko, zapri ventile in sprosti tlak. Ročico 6-potnega ventila premikaj samo pri ugasnjeni črpalki.</p></div></div>
+<div id="imGuide" hidden><button class="secondary im-close" id="imClose">← Vsa poglavja</button><div class="im-guide-head"><span id="imGuideIcon"></span><div><h2 id="imGuideTitle"></h2><small id="imGuideMeta"></small></div></div><div class="guide-progress"><span id="imBar"></span></div><div id="imStep"></div><div class="im-nav"><button class="secondary" id="imPrev">← Nazaj</button><button id="imComplete">Označi opravljeno ✓</button><button class="secondary" id="imNext">Naprej →</button></div></div>
+<div style="display:none"><div class="manual-tabs" id="manualTabs"><button data-manual="filter" class="active">Filter</button><button data-manual="valve">Ventil</button><button data-manual="pump">Črpalka</button><button data-manual="season">Sezona</button></div><div id="manualContent"></div></div>
+</div></div>
+
+<div id="interactiveGuides" class="assistant-view"><button class="assistant-back">← Nazaj</button><div class="card"><h2>Interaktivni vodiči</h2><div id="guidePicker" class="guide-picker"></div><div id="guideRunner" class="guide-runner" hidden><div class="guide-progress"><span id="guideProgressBar"></span></div><div class="guide-counter" id="guideCounter"></div><div id="guideStep"></div><div class="guide-actions"><button class="secondary" id="guidePrev">← Prejšnji</button><button id="guideDone">Korak opravljen ✓</button><button class="secondary" id="guideExit">Končaj vodič</button></div></div></div></div>
+
+<div id="models3d" class="assistant-view"><button class="assistant-back">← Nazaj</button><div class="card"><h2>3D modeli opreme</h2><div class="model-toolbar"><button data-model="filter" class="active">Peščeni filter</button><button data-model="pump">Črpalka</button><button data-model="valve">6-potni ventil</button></div><div class="model-stage" id="modelStage"><div class="model-scene" id="modelScene"></div><div class="model-hint">Povleci levo/desno za vrtenje · dvojni dotik za razstavljen pogled</div></div><div class="model-controls"><button id="rotateModel">Samodejno vrtenje</button><button class="secondary" id="explodeModel">Razstavi model</button><button class="secondary" id="resetModel">Ponastavi</button></div><div id="modelLegend" class="model-legend"></div></div></div>
+
+<div id="diagHistory" class="assistant-view"><button class="assistant-back">← Nazaj</button><div class="card"><h2>Zgodovina diagnostike</h2><div id="diagnosticHistoryList"></div><button class="danger" id="clearDiagnosticHistory">Izbriši zgodovino diagnostike</button></div></div>
+</section>
 
 <section id="logs"><div class="card"><h2>Dnevnik vzdrževanja</h2><div class="grid"><div><label>Opravilo ali sredstvo</label><select id="logType">
 <option>Planet Pool Multitab 200 g</option><option>Planet Pool Flockstar</option><option>Planet Pool pH Minus</option><option>Planet Pool pH Plus</option><option>Planet Pool klor granulat</option><option>Planet Pool algecid</option>
@@ -118,8 +188,8 @@
   <img src="mojbazen-icon.png" alt="MojBazen">
   <h2>MojBazen by Davor Gričnik</h2>
   <p>Preprosta aplikacija za pregled meritev, vzdrževanje bazena, zalogo kemikalij, vremensko napoved in odštevanje sredstva Multitab.</p>
-  <div class="app-version">Verzija programa: <b>v4.13</b></div>
+  <div class="app-version">Verzija programa: <b>v5.7</b></div>
 </div>
 <div class="card"><h2>Mere bazena</h2><label>Ime bazena</label><input id="sName"><div class="grid3"><div><label>Dolžina m</label><input id="sL" type="number" step="0.1"></div><div><label>Širina m</label><input id="sW" type="number" step="0.1"></div><div><label>Višina vode m</label><input id="sH" type="number" step="0.1"></div></div><div id="volumePreview" class="status ok">Izračunana prostornina: –</div><button id="saveProfileBtn">Shrani profil</button><div id="sMsg"></div></div><div class="card"><button class="secondary" id="darkModeBtn">Preklopi temni način</button></div></section>
-</main><script src="app.js"></script><script src="update-manager.js"></script>
+</main><script src="app.js"></script><script src="assistant-module.js"></script><script src="module-c.js"></script><script src="interactive-manual.js"></script><script src="update-manager.js"></script>
 </body></html>

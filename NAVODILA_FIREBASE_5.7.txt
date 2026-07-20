@@ -1,0 +1,30 @@
+MOJBAZEN 5.7 – FIREBASE
+
+FUNKCIJE
+- samodejna sinhronizacija med napravami po prijavi z istim Google računom
+- lokalno delovanje brez interneta in samodejni prenos po ponovni povezavi
+- ročni gumb »Sinhroniziraj zdaj«
+- obnova zadnjih podatkov iz Firebase oblaka
+- izvoz celotne varnostne kopije v JSON
+- obnova iz datoteke JSON
+- samodejna reševalna kopija pred vsako obnovo
+- podatki so ločeni po Firebase uporabniku
+
+NASTAVITEV FIREBASE
+1. V Firebase Console odpri projekt aplikacije MojBazen.
+2. Authentication > Sign-in method: omogoči Google.
+3. Firestore Database: ustvari zbirko v produkcijskem načinu.
+4. Objavi priložena pravila firestore.rules.
+5. Authentication > Settings > Authorized domains: preveri domeno Firebase Hosting in svojo domeno.
+6. Objavi vse datoteke z ukazom: firebase deploy
+7. Aplikacijo odpri prek Firebase Hosting naslova, ne neposredno kot lokalno datoteko.
+
+UPORABA
+1. V aplikaciji odpri Profil/Nastavitve.
+2. V kartici Firebase izberi »Prijava z Googlom«.
+3. Na drugi napravi odpri isto aplikacijo in se prijavi z istim računom.
+4. Za prisilni prenos uporabi »Sinhroniziraj zdaj«.
+5. »Obnovi iz oblaka« zamenja lokalne podatke z zadnjo kopijo v Firestore.
+
+VARNOST
+Firestore pravila dovoljujejo branje in pisanje samo prijavljenemu uporabniku v njegovi poti users/{uid}.

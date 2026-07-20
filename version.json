@@ -1,5 +1,5 @@
 {
-  "app": "MojBazen",
-  "version": "4.13",
-  "publishedAt": "2026-07-17"
+  "version": "5.7",
+  "build": "2026-07-20",
+  "notes": "Firebase modul: sinhronizacija med napravami, samodejno shranjevanje, ročna sinhronizacija, varnostne kopije ter obnova iz oblaka ali datoteke"
 }

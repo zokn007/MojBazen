@@ -1,0 +1,11 @@
+MOJBAZEN 5.5 – DG SMART POOL ASSISTANT, MODUL C
+
+NOVOSTI
+- Servisni priročnik: peščeni filter, 6-potni ventil, črpalka, začetek in konec sezone.
+- Interaktivni vodiči: Backwash + Rinse, menjava filtrirnega medija, polnjenje črpalke in zimska priprava.
+- Vgrajeni časovniki, napredek in shranjen zaključek vodiča.
+- Interaktivni 3D modeli filtra, črpalke in 6-potnega ventila.
+- 3D modele je mogoče vrteti, samodejno obračati in prikazati razstavljeno.
+
+VARNOST
+Pred servisom izklopite elektriko, zaprite ventile in sprostite tlak. Ročico 6-potnega ventila premikajte samo pri ugasnjeni črpalki.

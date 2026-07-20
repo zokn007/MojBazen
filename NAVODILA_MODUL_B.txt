@@ -1,0 +1,10 @@
+MojBazen v5.4 – DG Smart Pool Assistant Modul B
+
+NOVO:
+- Foto diagnostika vode, madežev in opreme
+- Lokalna analiza fotografije brez pošiljanja slike v oblak
+- AI priporočila na podlagi zadnjih meritev, dnevnika in diagnostik
+- Analiza zgodovine z oceno stabilnosti, trendi in uspešnostjo ukrepov
+
+POMEMBNO:
+Foto diagnostika je podporno orodje. Pred dodajanjem kemikalij vedno izmerite pH in prosti klor ter upoštevajte deklaracijo izdelka.
