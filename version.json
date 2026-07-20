@@ -1,5 +1,5 @@
 {
-  "version": "5.7",
+  "version": "6.0",
   "build": "2026-07-20",
-  "notes": "Firebase modul: sinhronizacija med napravami, samodejno shranjevanje, ročna sinhronizacija, varnostne kopije ter obnova iz oblaka ali datoteke"
+  "notes": "MojBazen 6.0: vedno vključeni temni način, sprotna sinhronizacija med napravami, dnevne varnostne kopije v Firebase, obnova podatkov in samodejno zaznavanje novih različic"
 }

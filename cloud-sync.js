@@ -163,8 +163,25 @@
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         updatedAtMs: now,
         updatedByDevice: deviceId,
-        schemaVersion: 3
+        schemaVersion: 4
       }, { merge: true });
+      const backupDay = new Date(now).toISOString().slice(0, 10);
+      const metaAfterUpload = readMeta();
+      if (metaAfterUpload.lastBackupDay !== backupDay) {
+        try {
+          await docRef().collection('backups').doc(backupDay).set({
+            data: collect(),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAtMs: now,
+            deviceId,
+            schemaVersion: 4,
+            appVersion: document.documentElement.dataset.appVersion || ''
+          }, { merge: true });
+          writeMeta({ lastBackupDay: backupDay });
+        } catch (backupError) {
+          console.warn('Samodejna dnevna varnostna kopija ni uspela.', backupError);
+        }
+      }
       writeMeta({ lastUpload: now, lastSuccess: now, pending: false });
       setStatus('ok', 'Vsi podatki so sinhronizirani.');
       if (manual) toast('Sinhronizacija je končana');
@@ -206,7 +223,7 @@
   function exportBackup(silent) {
     const payload = {
       format: 'DG Smart App Backup',
-      schemaVersion: 3,
+      schemaVersion: 4,
       appId: cfg.appId,
       appName: cfg.appName,
       appVersion: document.documentElement.dataset.appVersion || '',
