@@ -1,0 +1,5 @@
+MojBazen 6.0.1
+
+- Temni način je vedno vključen; gumb in obvestilo v Profilu sta odstranjena.
+- V razdelku Vreme ostane samo zgornji 7-dnevni pregled; spodnji graf je odstranjen.
+- V razdelku Podatki ostanejo ročni izvoz/uvoz varnostne kopije, CSV in tisk/PDF kot dodatno varovalo ob Firebase sinhronizaciji.

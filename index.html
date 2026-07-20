@@ -1,4 +1,4 @@
-<!doctype html><html data-app-version="6.0" lang="sl"><head>
+<!doctype html><html data-app-version="6.0.1" lang="sl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07111f"><title>MojBazen</title>
 <link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="stylesheet" href="styles.css">
@@ -10,7 +10,7 @@
 <script src="/__/firebase/12.16.0/firebase-firestore-compat.js"></script>
 <script src="/__/firebase/init.js"></script>
 <script src="cloud-sync.js"></script>
-</head><body>
+</head><body class="dark">
 <div id="splashScreen" class="splash-screen" role="status" aria-label="MojBazen se zaganja">
   <div class="splash-content">
     <img src="mojbazen-icon.png" alt="MojBazen">
@@ -181,15 +181,15 @@
 
 <section id="tasks"><div class="card"><h2>Ponavljajoči koledarski opomniki</h2><p class="small">Interval »vsakih X dni« se zapiše v koledarski dogodek. Obvestilo je ob 09:00 samo na določen dan.</p><div id="taskList"></div><button class="secondary" id="requestNotificationsBtn">Dovoli obvestila aplikacije</button></div></section>
 <section id="charts"><div class="card"><h2>Graf meritev</h2><select id="chartMetric"><option value="ph">pH</option><option value="cl">Prosti klor</option><option value="temp">Temperatura</option></select></div><div class="card"><canvas id="mainChart" class="chart" width="900" height="240"></canvas></div></section>
-<section id="weather"><div class="card"><h2>7-dnevna vremenska napoved</h2><button id="loadWeatherBtn">Pridobi napoved za mojo lokacijo</button><div id="weatherSummary"></div></div><div class="card"><canvas id="weatherChart" class="chart" width="900" height="260"></canvas></div></section>
+<section id="weather"><div class="card"><h2>7-dnevna vremenska napoved</h2><button id="loadWeatherBtn">Pridobi napoved za mojo lokacijo</button><div id="weatherSummary"></div></div></section>
 <section id="data"><div class="card"><h2>Podatki</h2><div class="actions"><button id="exportJsonBtn">Izvozi varnostno kopijo</button><button class="secondary" id="importJsonBtn">Uvozi varnostno kopijo</button><button id="exportCsvBtn">Izvozi CSV</button><button class="secondary" id="printBtn">Natisni / PDF</button></div><input id="importFile" type="file" accept=".json" hidden></div><div class="card"><h2>Zgodovina meritev</h2><div style="overflow:auto"><table><thead><tr><th>Datum</th><th>pH</th><th>Klor</th><th>°C</th><th></th></tr></thead><tbody id="historyBody"></tbody></table></div></div></section>
 <section id="settings">
 <div class="card profile-info-card">
   <img src="mojbazen-icon.png" alt="MojBazen">
   <h2>MojBazen by Davor Gričnik</h2>
   <p>Preprosta aplikacija za pregled meritev, vzdrževanje bazena, zalogo kemikalij, vremensko napoved in odštevanje sredstva Multitab.</p>
-  <div class="app-version">Verzija programa: <b>v6.0</b></div>
+  <div class="app-version">Verzija programa: <b>v6.0.1</b></div>
 </div>
-<div class="card"><h2>Mere bazena</h2><label>Ime bazena</label><input id="sName"><div class="grid3"><div><label>Dolžina m</label><input id="sL" type="number" step="0.1"></div><div><label>Širina m</label><input id="sW" type="number" step="0.1"></div><div><label>Višina vode m</label><input id="sH" type="number" step="0.1"></div></div><div id="volumePreview" class="status ok">Izračunana prostornina: –</div><button id="saveProfileBtn">Shrani profil</button><div id="sMsg"></div></div><div class="card"><div class="status ok">Temni način je vedno vključen.</div><button class="secondary" id="darkModeBtn" disabled>Temni način je vedno vključen</button></div></section>
+<div class="card"><h2>Mere bazena</h2><label>Ime bazena</label><input id="sName"><div class="grid3"><div><label>Dolžina m</label><input id="sL" type="number" step="0.1"></div><div><label>Širina m</label><input id="sW" type="number" step="0.1"></div><div><label>Višina vode m</label><input id="sH" type="number" step="0.1"></div></div><div id="volumePreview" class="status ok">Izračunana prostornina: –</div><button id="saveProfileBtn">Shrani profil</button><div id="sMsg"></div></div></section>
 </main><script src="app.js"></script><script src="assistant-module.js"></script><script src="module-c.js"></script><script src="interactive-manual.js"></script><script src="update-manager.js"></script>
 </body></html>

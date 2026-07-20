@@ -1,5 +1,5 @@
 {
-  "version": "6.0",
+  "version": "6.0.1",
   "build": "2026-07-20",
-  "notes": "MojBazen 6.0: vedno vključeni temni način, sprotna sinhronizacija med napravami, dnevne varnostne kopije v Firebase, obnova podatkov in samodejno zaznavanje novih različic"
+  "notes": "Vedno temni način brez stikala; poenostavljen prikaz vremena brez spodnjega grafa; Firebase sinhronizacija, obnova iz oblaka in ročna rezervna kopija ostajajo vključene."
 }
