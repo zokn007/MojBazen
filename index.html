@@ -1,4 +1,4 @@
-<!doctype html><html data-app-version="6.0.1" lang="sl"><head>
+<!doctype html><html data-app-version="6.0.2" lang="sl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07111f"><title>MojBazen</title>
 <link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="stylesheet" href="styles.css">
@@ -170,11 +170,17 @@
 <div id="diagHistory" class="assistant-view"><button class="assistant-back">← Nazaj</button><div class="card"><h2>Zgodovina diagnostike</h2><div id="diagnosticHistoryList"></div><button class="danger" id="clearDiagnosticHistory">Izbriši zgodovino diagnostike</button></div></div>
 </section>
 
-<section id="logs"><div class="card"><h2>Dnevnik vzdrževanja</h2><div class="grid"><div><label>Opravilo ali sredstvo</label><select id="logType">
-<option>Planet Pool Multitab 200 g</option><option>Planet Pool Flockstar</option><option>Planet Pool pH Minus</option><option>Planet Pool pH Plus</option><option>Planet Pool klor granulat</option><option>Planet Pool algecid</option>
-<option>Arekina pH Minus</option><option>Arekina pH Plus</option><option>Arekina klor</option><option>Arekina algecid</option><option>Arekina kosmičenje</option>
-<option>Izpran filter</option><option>Robotsko sesanje</option><option>Očiščena vodna linija</option><option>Delna menjava vode</option><option>Drugo</option>
-</select></div><div><label>Količina</label><input id="logAmount"></div></div><label>Strošek €</label><input id="logCost" type="number" step="0.01"><label>Opomba</label><textarea id="logNote" rows="2"></textarea><button id="addLogBtn">Dodaj v dnevnik</button></div><div class="card"><h2>Vnosi</h2><div id="logList"></div></div></section>
+<section id="logs">
+<div class="card"><h2>Dnevnik dogodkov in vzdrževanja</h2>
+<div class="grid">
+<div><label>Kategorija</label><select id="logCategory"><option>Vzdrževanje</option><option>Kemikalije</option><option>Popravilo</option><option>Menjava opreme</option><option>Čiščenje</option><option>Drugo</option></select></div>
+<div><label>Dogodek</label><select id="logType"><option>Backwash + Rinse</option><option>Backwash</option><option>Rinse</option><option>Menjava žarnice</option><option>Menjava črpalke</option><option>Menjava peska ali stekla v filtru</option><option>Menjava tesnila</option><option>Servis robotskega sesalnika</option><option>Spomladanski zagon</option><option>Zimska priprava</option><option>Dodana kemikalija</option><option>Dogodek po meri</option></select></div>
+</div>
+<label>Naslov po meri</label><input id="logCustomTitle" placeholder="npr. Menjava UV žarnice ali čiščenje skimerja">
+<div class="grid"><div><label>Datum in ura</label><input id="logDate" type="datetime-local"></div><div><label>Količina ali podatek</label><input id="logAmount" placeholder="npr. 5 min, 10 kg, model črpalke"></div></div>
+<label>Strošek €</label><input id="logCost" type="number" step="0.01" min="0"><label>Opomba</label><textarea id="logNote" rows="3" placeholder="Kaj je bilo narejeno, kateri deli so bili uporabljeni …"></textarea><button id="addLogBtn">Dodaj v dnevnik</button><div id="logMsg"></div></div>
+<div class="card"><h2>Vnosi</h2><div class="actions"><button class="secondary" data-log-filter="Vse">Vse</button><button class="secondary" data-log-filter="Vzdrževanje">Vzdrževanje</button><button class="secondary" data-log-filter="Kemikalije">Kemikalije</button><button class="secondary" data-log-filter="Popravilo">Popravila</button><button class="secondary" data-log-filter="Menjava opreme">Oprema</button></div><div id="logList"></div></div>
+</section>
 
 <section id="stock"><div class="card"><h2>Zaloga kemikalij</h2><label>Izberi artikel</label><select id="stockCatalog"></select>
 <div class="grid"><div><label>Naziv</label><input id="stockName"></div><div><label>Količina</label><input id="stockQty" type="number" step="0.1"></div><div><label>Enota</label><select id="stockUnit"><option>g</option><option>kg</option><option>ml</option><option>l</option><option>kos</option></select></div><div><label>Opozori pod</label><input id="stockMin" type="number" step="0.1"></div></div><button id="addStockBtn">Dodaj izdelek</button></div><div class="card"><h2>Pregled zaloge</h2><div id="stockList"></div><button class="danger" id="clearStockBtn">Izbriši vso zalogo</button></div></section>
@@ -188,7 +194,7 @@
   <img src="mojbazen-icon.png" alt="MojBazen">
   <h2>MojBazen by Davor Gričnik</h2>
   <p>Preprosta aplikacija za pregled meritev, vzdrževanje bazena, zalogo kemikalij, vremensko napoved in odštevanje sredstva Multitab.</p>
-  <div class="app-version">Verzija programa: <b>v6.0.1</b></div>
+  <div class="app-version">Verzija programa: <b>v6.0.2</b></div>
 </div>
 <div class="card"><h2>Mere bazena</h2><label>Ime bazena</label><input id="sName"><div class="grid3"><div><label>Dolžina m</label><input id="sL" type="number" step="0.1"></div><div><label>Širina m</label><input id="sW" type="number" step="0.1"></div><div><label>Višina vode m</label><input id="sH" type="number" step="0.1"></div></div><div id="volumePreview" class="status ok">Izračunana prostornina: –</div><button id="saveProfileBtn">Shrani profil</button><div id="sMsg"></div></div></section>
 </main><script src="app.js"></script><script src="assistant-module.js"></script><script src="module-c.js"></script><script src="interactive-manual.js"></script><script src="update-manager.js"></script>

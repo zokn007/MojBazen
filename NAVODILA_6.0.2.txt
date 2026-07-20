@@ -1,0 +1,5 @@
+MojBazen 6.0.2
+
+- Dnevnik omogoča poljubne dogodke vzdrževanja, popravil in menjave opreme.
+- Dodani so datum in ura, kategorije, filtri, urejanje in brisanje dogodkov.
+- Gumb Natisni / PDF zdaj odpre pripravljeno poročilo in sistemski dialog za shranjevanje v PDF.

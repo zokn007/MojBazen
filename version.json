@@ -1,5 +1,5 @@
 {
-  "version": "6.0.1",
+  "version": "6.0.2",
   "build": "2026-07-20",
-  "notes": "Vedno temni način brez stikala; poenostavljen prikaz vremena brez spodnjega grafa; Firebase sinhronizacija, obnova iz oblaka in ročna rezervna kopija ostajajo vključene."
+  "notes": "Dnevnik dogodkov po meri z urejanjem, brisanjem in filtri ter popravljeno ustvarjanje PDF poročila."
 }

@@ -40,6 +40,11 @@ function isoDate(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart
 function download(data,name,type){const b=new Blob([data],{type}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function daysBetween(a,b){const x=new Date(a);x.setHours(0,0,0,0);const y=new Date(b);y.setHours(0,0,0,0);return Math.ceil((y-x)/86400000)}
 
+
+function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]))}
+function localDateTimeValue(date=new Date()){const d=new Date(date.getTime()-date.getTimezoneOffset()*60000);return d.toISOString().slice(0,16)}
+let activeLogFilter="Vse";
+
 function selectTab(id){document.querySelectorAll(".menu-grid button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));document.querySelectorAll("section").forEach(s=>s.classList.toggle("active",s.id===id));if(id==="charts")drawMeasurementChart();if(id==="data")renderHistory();if(id==="logs")renderLogs();if(id==="stock")renderStock();location.hash=id}
 document.querySelectorAll(".menu-grid button").forEach(b=>b.onclick=()=>selectTab(b.dataset.tab));
 
@@ -106,8 +111,33 @@ function calcChemical(){
  $("chemResult").innerHTML=`<div class="status ok">Za <b>${v.toFixed(1)} m³</b> uporabi ${formatDose(min,max,p.unit)}.<br><span class="small">${detail}</span></div><div class="status warn">Odmerjaj postopoma, po tretmaju ponovno izmeri vodo in ne prekorači navodil na embalaži.</div>`;
 }
 
-function addLog(){const a=get(KEYS.logs,[]);a.unshift({id:Date.now(),date:new Date().toISOString(),type:$("logType").value,amount:$("logAmount").value,cost:Number($("logCost").value||0),note:$("logNote").value});set(KEYS.logs,a);renderLogs()}
-function renderLogs(){const a=get(KEYS.logs,[]);$("logList").innerHTML=a.length?a.map(x=>`<div class="log"><b>${x.type}</b><div class="small">${new Date(x.date).toLocaleString("sl-SI")} · ${x.amount||"brez količine"} · ${x.cost.toFixed(2)} €</div><div>${x.note||""}</div></div>`).join(""):'<div class="small">Ni vnosov.</div>'}
+function addLog(){
+ const preset=$("logType").value,custom=$("logCustomTitle").value.trim();
+ const title=preset==="Dogodek po meri"?custom:(custom||preset);
+ if(!title){$("logMsg").innerHTML='<div class="status bad">Vpiši naslov dogodka.</div>';return}
+ const dateValue=$("logDate").value;
+ const a=get(KEYS.logs,[]);
+ a.unshift({id:Date.now(),date:dateValue?new Date(dateValue).toISOString():new Date().toISOString(),category:$("logCategory").value,type:title,amount:$("logAmount").value.trim(),cost:Number($("logCost").value||0),note:$("logNote").value.trim()});
+ set(KEYS.logs,a);
+ $("logCustomTitle").value="";$("logAmount").value="";$("logCost").value="";$("logNote").value="";$("logDate").value=localDateTimeValue();
+ $("logMsg").innerHTML='<div class="status ok">Dogodek je shranjen.</div>';
+ renderLogs();
+}
+function deleteLog(id){if(!confirm("Izbrišem ta dogodek iz dnevnika?"))return;set(KEYS.logs,get(KEYS.logs,[]).filter(x=>x.id!==id));renderLogs()}
+function editLog(id){
+ const a=get(KEYS.logs,[]),x=a.find(v=>v.id===id);if(!x)return;
+ const title=prompt("Naslov dogodka:",x.type||"");if(title===null||!title.trim())return;
+ const note=prompt("Opomba:",x.note||"");if(note===null)return;
+ x.type=title.trim();x.note=note.trim();set(KEYS.logs,a);renderLogs();
+}
+function renderLogs(){
+ const all=get(KEYS.logs,[]).map(x=>({...x,category:x.category||"Vzdrževanje"}));
+ const a=activeLogFilter==="Vse"?all:all.filter(x=>x.category===activeLogFilter);
+ $("logList").innerHTML=a.length?a.map(x=>`<div class="log"><div class="log-head"><div><span class="pill">${escapeHtml(x.category)}</span><br><b>${escapeHtml(x.type)}</b></div><div class="actions"><button class="secondary" data-log-edit="${x.id}">Uredi</button><button class="danger" data-log-del="${x.id}">Izbriši</button></div></div><div class="small">${new Date(x.date).toLocaleString("sl-SI")} · ${x.amount?escapeHtml(x.amount):"brez dodatnega podatka"} · ${Number(x.cost||0).toFixed(2)} €</div>${x.note?`<div>${escapeHtml(x.note)}</div>`:""}</div>`).join(""):'<div class="small">Ni vnosov za izbrani filter.</div>';
+ document.querySelectorAll("[data-log-del]").forEach(b=>b.onclick=()=>deleteLog(Number(b.dataset.logDel)));
+ document.querySelectorAll("[data-log-edit]").forEach(b=>b.onclick=()=>editLog(Number(b.dataset.logEdit)));
+ document.querySelectorAll("[data-log-filter]").forEach(b=>b.classList.toggle("active",b.dataset.logFilter===activeLogFilter));
+}
 
 function addStock(){const a=get(KEYS.stock,[]);a.push({id:Date.now(),name:$("stockName").value||"Izdelek",qty:Number($("stockQty").value||0),unit:$("stockUnit").value,min:Number($("stockMin").value||0)});set(KEYS.stock,a);renderStock()}
 function renderStock(){const a=get(KEYS.stock,[]);$("stockList").innerHTML=a.length?a.map(x=>`<div class="stock"><b>${x.name}</b><div class="status ${x.qty<=x.min?"bad":"ok"}">${x.qty} ${x.unit}${x.qty<=x.min?" · nizka zaloga":""}</div><div class="actions"><button class="secondary" data-dec="${x.id}">−1</button><button data-inc="${x.id}">+1</button><button class="danger" data-del="${x.id}">Izbriši</button></div></div>`).join(""):'<div class="small">Ni izdelkov.</div>';document.querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>changeStock(Number(b.dataset.dec),-1));document.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>changeStock(Number(b.dataset.inc),1));document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{set(KEYS.stock,get(KEYS.stock,[]).filter(x=>x.id!==Number(b.dataset.del)));renderStock()})}
@@ -161,15 +191,25 @@ function renderWeather(data=get("poolWeather44",[])){
 }
 
 function renderHistory(){const a=measurements();$("historyBody").innerHTML=a.length?a.map(m=>`<tr><td>${new Date(m.date).toLocaleString("sl-SI")}</td><td>${m.ph}</td><td>${m.cl}</td><td>${m.temp||"–"}</td><td><button class="danger" data-m-del="${m.id}" style="padding:5px;margin:0">×</button></td></tr>`).join(""):'<tr><td colspan="5">Ni meritev.</td></tr>';document.querySelectorAll("[data-m-del]").forEach(b=>b.onclick=()=>{set(KEYS.measurements,measurements().filter(x=>x.id!==Number(b.dataset.mDel)));renderHistory();refresh()})}
-function exportJSON(){download(JSON.stringify({version:"6.0.1",profile:profile(),measurements:measurements(),logs:get(KEYS.logs,[]),stock:get(KEYS.stock,[]),tasks:tasks(),multitab:multitabData(),diagnostics:get(KEYS.diagnostics,[])},null,2),"MojBazen-v6-0-1-backup.json","application/json")}
+function exportJSON(){download(JSON.stringify({version:"6.0.2",profile:profile(),measurements:measurements(),logs:get(KEYS.logs,[]),stock:get(KEYS.stock,[]),tasks:tasks(),multitab:multitabData(),diagnostics:get(KEYS.diagnostics,[])},null,2),"MojBazen-v6-0-2-backup.json","application/json")}
 function exportCSV(){const rows=[["Datum","pH","Klor","Temperatura"],...measurements().map(m=>[m.date,m.ph,m.cl,m.temp])];download(rows.map(r=>r.join(";")).join("\n"),"MojBazen-meritve.csv","text/csv")}
+function generatePDFReport(){
+ const p=profile(),ms=measurements(),logs=get(KEYS.logs,[]),stock=get(KEYS.stock,[]),ts=tasks();
+ const rows=(items,empty)=>items.length?items.join(""):empty;
+ const report=window.open("","_blank");
+ if(!report){alert("Brskalnik je preprečil odpiranje poročila. Dovoli pojavna okna in poskusi ponovno.");return}
+ const html=`<!doctype html><html lang="sl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>MojBazen poročilo</title><style>body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#111;margin:32px}h1{margin-bottom:4px}h2{margin-top:28px;border-bottom:2px solid #222;padding-bottom:5px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #bbb;padding:7px;text-align:left}th{background:#eee}.meta{color:#555;margin-bottom:20px}.box{border:1px solid #bbb;border-radius:10px;padding:12px;margin:8px 0}.small{font-size:12px;color:#555}@media print{body{margin:12mm}.no-print{display:none}h2{break-after:avoid}.box,tr{break-inside:avoid}}</style></head><body><button class="no-print" onclick="window.print()">Shrani kot PDF / Natisni</button><h1>MojBazen – poročilo</h1><div class="meta">Izdelano: ${new Date().toLocaleString("sl-SI")} · različica 6.0.2</div><h2>Podatki o bazenu</h2><div class="box"><b>${escapeHtml(p.name||"Domači bazen")}</b><br>Dimenzije: ${escapeHtml(p.l||"–")} × ${escapeHtml(p.w||"–")} × ${escapeHtml(p.h||"–")} m<br>Prostornina: ${volume()?volume().toFixed(1)+" m³":"–"}</div><h2>Zadnje meritve</h2><table><thead><tr><th>Datum</th><th>pH</th><th>Klor</th><th>Temperatura</th><th>Opomba</th></tr></thead><tbody>${rows(ms.slice(0,30).map(m=>`<tr><td>${new Date(m.date).toLocaleString("sl-SI")}</td><td>${escapeHtml(m.ph)}</td><td>${escapeHtml(m.cl)}</td><td>${escapeHtml(m.temp||"–")}</td><td>${escapeHtml(m.note||"")}</td></tr>`),'<tr><td colspan="5">Ni meritev.</td></tr>')}</tbody></table><h2>Dnevnik dogodkov</h2>${rows(logs.slice(0,100).map(x=>`<div class="box"><b>${escapeHtml(x.type)}</b> <span class="small">(${escapeHtml(x.category||"Vzdrževanje")})</span><br><span class="small">${new Date(x.date).toLocaleString("sl-SI")} · ${escapeHtml(x.amount||"")} · ${Number(x.cost||0).toFixed(2)} €</span>${x.note?`<br>${escapeHtml(x.note)}`:""}</div>`),'<div class="box">Ni dogodkov.</div>')}<h2>Zaloga</h2><table><thead><tr><th>Artikel</th><th>Količina</th><th>Najmanj</th></tr></thead><tbody>${rows(stock.map(x=>`<tr><td>${escapeHtml(x.name)}</td><td>${escapeHtml(x.qty)} ${escapeHtml(x.unit)}</td><td>${escapeHtml(x.min)} ${escapeHtml(x.unit)}</td></tr>`),'<tr><td colspan="3">Ni izdelkov.</td></tr>')}</tbody></table><h2>Opomniki</h2>${rows(ts.map(t=>`<div class="box"><b>${escapeHtml(t.title)}</b><br><span class="small">Naslednji datum: ${escapeHtml(t.next||"ni določen")} · ponovitev vsakih ${escapeHtml(t.days)} dni</span></div>`),'<div class="box">Ni opomnikov.</div>')}<script>window.addEventListener('load',()=>setTimeout(()=>window.print(),350));<\/script></body></html>`;
+ report.document.open();report.document.write(html);report.document.close();
+}
+
 function importJSON(file){const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(o.profile)set(KEYS.profile,o.profile);if(o.measurements)set(KEYS.measurements,o.measurements);if(o.logs)set(KEYS.logs,o.logs);if(o.stock)set(KEYS.stock,o.stock);if(o.tasks)set(KEYS.tasks,o.tasks);if(o.multitab)set(KEYS.multitab,o.multitab);if(o.diagnostics)set(KEYS.diagnostics,o.diagnostics);loadProfile();refresh();renderTreatmentOptions();renderTasks();renderLogs();renderStock();alert("Podatki so uvoženi.")}catch{alert("Datoteka ni veljavna.")}};r.readAsText(file)}
 
 $("product").innerHTML=products.map(p=>`<option>${p.name}</option>`).join("");
 $("product").onchange=renderTreatmentOptions;
 $("stockCatalog").innerHTML=stockCatalog.map(x=>`<option>${x}</option>`).join("");
 $("stockCatalog").onchange=()=>{$("stockName").value=$("stockCatalog").value==="Drugo"?"":$("stockCatalog").value};
-$("saveMeasurementBtn").onclick=saveMeasurement;$("saveProfileBtn").onclick=saveProfile;$("calcChemicalBtn").onclick=calcChemical;$("addLogBtn").onclick=addLog;$("addStockBtn").onclick=addStock;$("clearStockBtn").onclick=()=>{if(confirm("Res izbrišem vso zalogo?")){set(KEYS.stock,[]);renderStock()}};$("requestNotificationsBtn").onclick=requestNotifications;$("chartMetric").onchange=drawMeasurementChart;$("loadWeatherBtn").onclick=loadWeather;$("exportJsonBtn").onclick=exportJSON;$("exportCsvBtn").onclick=exportCSV;$("printBtn").onclick=()=>window.print();$("importJsonBtn").onclick=()=>$("importFile").click();$("importFile").onchange=e=>{if(e.target.files[0])importJSON(e.target.files[0])};$("setMultitabBtn").onclick=setMultitab;$("multitabCard").onclick=e=>{if(e.target.tagName!=="BUTTON")setMultitab()};$("calendarMultitabBtn").onclick=calendarMultitab;
+$("logDate").value=localDateTimeValue();document.querySelectorAll("[data-log-filter]").forEach(b=>b.onclick=()=>{activeLogFilter=b.dataset.logFilter;renderLogs()});
+$("saveMeasurementBtn").onclick=saveMeasurement;$("saveProfileBtn").onclick=saveProfile;$("calcChemicalBtn").onclick=calcChemical;$("addLogBtn").onclick=addLog;$("addStockBtn").onclick=addStock;$("clearStockBtn").onclick=()=>{if(confirm("Res izbrišem vso zalogo?")){set(KEYS.stock,[]);renderStock()}};$("requestNotificationsBtn").onclick=requestNotifications;$("chartMetric").onchange=drawMeasurementChart;$("loadWeatherBtn").onclick=loadWeather;$("exportJsonBtn").onclick=exportJSON;$("exportCsvBtn").onclick=exportCSV;$("printBtn").onclick=generatePDFReport;$("importJsonBtn").onclick=()=>$("importFile").click();$("importFile").onchange=e=>{if(e.target.files[0])importJSON(e.target.files[0])};$("setMultitabBtn").onclick=setMultitab;$("multitabCard").onclick=e=>{if(e.target.tagName!=="BUTTON")setMultitab()};$("calendarMultitabBtn").onclick=calendarMultitab;
 document.addEventListener("pointerdown",e=>{const b=e.target.closest("button");if(b)b.classList.add("is-pressed")});
 document.addEventListener("pointerup",()=>document.querySelectorAll("button.is-pressed").forEach(b=>setTimeout(()=>b.classList.remove("is-pressed"),90)));
 document.addEventListener("pointercancel",()=>document.querySelectorAll("button.is-pressed").forEach(b=>b.classList.remove("is-pressed")));

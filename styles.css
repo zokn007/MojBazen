@@ -515,3 +515,5 @@ body.dark .manual-section,body.dark .guide-step-card,body.dark .legend-item{back
 .firebase-info-grid b{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .firebase-actions button:disabled{opacity:.48;cursor:not-allowed}
 @media(max-width:620px){.firebase-info-grid{grid-template-columns:1fr}.firebase-actions{display:grid;grid-template-columns:1fr 1fr}.firebase-actions button{width:100%;margin:0}.firebase-actions button:first-child,.firebase-actions button:last-child{grid-column:1/-1}}
+.log-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.log-head .actions{margin:0;flex-wrap:nowrap}.log-head button{padding:7px 10px;margin:0}.actions button.active{outline:2px solid #63c7ff;box-shadow:0 0 0 3px rgba(99,199,255,.18)}
+@media(max-width:620px){.log-head{display:block}.log-head .actions{margin-top:10px}}
